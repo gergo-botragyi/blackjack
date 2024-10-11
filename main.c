@@ -23,7 +23,7 @@ int main(){
                 gyik();
                 break;
         }
-
+        econio_clrscr();
         printf("Uj jatek - 0\n");
         printf("Jatekosok - 1\n");
         printf("GYIK - 2\n");
