@@ -22,6 +22,10 @@ int main(){
             case 2:
                 gyik();
                 break;
+            default:
+                printf("Nincs ilyen menupont!");
+                econio_sleep(2);
+                break;
         }
         econio_clrscr();
         printf("Uj jatek - 0\n");

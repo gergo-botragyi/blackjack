@@ -1,8 +1,9 @@
-7
-AAAA 0 0
-Bbb 1111 1
+8
+Aa 0 0
+Be 1111 1
 C 2222 2
 D 3333 3
+Asd 0 0
 F 0 0
 G 0 0
-Hhh 0 0
+Qwerty 0 0
