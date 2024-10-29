@@ -3,7 +3,6 @@
 #include "econio.h"
 #include "debugmalloc.h"
 
-
 void menu(){
     printf("Jatekos hozzadasa - 0\n");
     printf("Bot hozzadasa - 1\n");
@@ -28,12 +27,14 @@ void removetext(int kezdsor, int vegsor){
     }
 }
 
-char *jatekoshozzaad(Jatekostomb jatekostomb){
+char* jatekoshozzaad(Jatekostomb jatekostomb){
     removetext(11, 17);
+
     econio_gotoxy(0,11);
     nevekkiir(jatekostomb);
     printf("Jatekos neve: ");
-    char nev[50];
+
+    char nev[20];
     scanf("%s", nev);
 
     removetext(11, 11+(jatekostomb.meret));
@@ -64,18 +65,21 @@ Jatekostomb ujjatek(Jatekostomb jatekostomb){
 
     int jatszokszama = 0;
     char **jatszok = (char**)calloc(jatekostomb.meret,sizeof(char*));
-    char *nev;
+    char nev[20];
     while(inp != 9){
         switch (inp)
         {
         case 0:
-            nev = jatekoshozzaad(jatekostomb);
+            removetext(20,20); //Nincs ilyen jatekos miatt
+            strcpy(nev,jatekoshozzaad(jatekostomb));
             if(strcmp(nev, " ")!=0 && !leultetve(jatszok, jatszokszama, nev)){
                 econio_gotoxy(jatszokszama*20,7); //max 20 karakter egy nev
                 printf("%s", nev);
                 jatszokszama++;
-                //strcpy(jatszok[jatszokszama-1], nev);
                 jatszok[jatszokszama-1] = nev;
+            }else{
+                econio_gotoxy(0,20);
+                printf("Nincs ilyen nevu jatekos, vagy mar jatekban van!");
             }
             econio_gotoxy(0,11);
             menu();
@@ -95,12 +99,9 @@ Jatekostomb ujjatek(Jatekostomb jatekostomb){
             econio_sleep(2);
             break;
         }
-        for (int i = 0; i < jatekostomb.meret; i++)
-        {
-            printf("%s", jatszok[i]);
-        }
         
     }
 
+    free(jatszok);
     return jatekostomb;
 }

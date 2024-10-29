@@ -31,21 +31,6 @@ void beolvas(Jatekostomb jatekostomb){
     fclose(file);
 }
 
-/*void kiirFile(){
-    FILE *file = fopen("jatekosok.txt", "r");
-    if(file == NULL){printf("Unable to read file! Check if file is missing!");}
-
-    char nev[50];
-    int nyeremeny, korok;
-    while(fscanf(file, "%s %d %d", nev, &nyeremeny, &korok) != EOF){
-        printf("Nev: %s\n", nev);
-        printf("Nyert osszeg: %d\n", nyeremeny);
-        printf("Jatszott korok: %d\n", korok);
-        printf("\n");
-    }
-    fclose(file);
-}*/
-
 void kiir(Jatekostomb jatekostomb){
     for (int i = 0; i < jatekostomb.meret; i++)
     {
@@ -89,128 +74,66 @@ Jatekostomb szerkesztes(Jatekostomb jatekostomb){
     econio_clrscr();
     kiir(jatekostomb);
 
-    int inp;
-    printf("Szerkesztes - 0\n");
-    printf("Vissza - 9\n");
-    scanf("%d", &inp);
-
     char reginev[50];
     char ujnev[50];
-    while(inp != 9){
-        if(inp == 0){
-            econio_clrscr();
+    econio_clrscr();
 
-            kiir(jatekostomb);
-            printf("Szerkeszteni kivant jatekos neve: ");
-            scanf("%s", reginev);
+    kiir(jatekostomb);
+    printf("Szerkeszteni kivant jatekos neve: ");
+    scanf("%s", reginev);
 
-            printf("Uj nev: ");
-            scanf("%s", ujnev);
+    printf("Uj nev: ");
+    scanf("%s", ujnev);
 
-            int index = letezik(jatekostomb, reginev);
-            if(index != -1){
-                strcpy(jatekostomb.jatekosok[index].nev, ujnev);
-            }else{
-                printf("Nincs ilyen nevu jatekos!");
-                econio_sleep(2);
-            }
-
-            econio_clrscr();
-
-            kiir(jatekostomb);
-            printf("Szerkesztes - 0\n");
-            printf("Vissza - 9\n");
-            scanf("%d", &inp);
-        }else{
-            printf("Nincs ilyen menupont! Adj meg egy ujat!\n");
-            scanf("%d", &inp);
-        }
+    int index = letezik(jatekostomb, reginev);
+    if(index != -1){
+        strcpy(jatekostomb.jatekosok[index].nev, ujnev);
+    }else{
+        printf("Nincs ilyen nevu jatekos!");
+        econio_sleep(2);
     }
+
     filebair(jatekostomb);
     return jatekostomb;
-}
-
-Jatekos *ujjatekos(Jatekos *jatekosok, int meret, Jatekos uj){
-    Jatekos *seged = (Jatekos*) calloc(meret,sizeof(Jatekos));
-    for (int i = 0; i < meret-1; i++)
-    {
-        strcpy(seged[i].nev, jatekosok[i].nev);
-        seged[i].nyeremeny = jatekosok[i].nyeremeny;
-        seged[i].korok = jatekosok[i].korok;
-    }
-    strcpy(seged[meret-1].nev, uj.nev);
-    seged[meret-1].nyeremeny = 0;
-    seged[meret-1].korok = 0;
-                
-    free(jatekosok);
-    jatekosok = (Jatekos*) calloc(meret,sizeof(Jatekos));
-                
-    for (int i = 0; i < meret; i++)
-    {
-        strcpy(jatekosok[i].nev, seged[i].nev);
-        jatekosok[i].nyeremeny = seged[i].nyeremeny;
-        jatekosok[i].korok = seged[i].korok;
-    }
-    free(seged);
-    return jatekosok;
 }
 
 Jatekostomb letrehozas(Jatekostomb jatekostomb){
     econio_clrscr();
     if(jatekostomb.meret == 0){printf("Meg nincsenek letrehozott jatekosok!\n");}
 
-    int inp;
     kiir(jatekostomb);
-    printf("Letrehozas - 0\n");
-    printf("Vissza - 9\n");
-    scanf("%d", &inp);
 
-    while(inp != 9){
-        if(inp == 0){
-            econio_clrscr();
-            kiir(jatekostomb);
+    econio_clrscr();
+    kiir(jatekostomb);
 
-            Jatekos uj;
-            uj.nyeremeny = 0;
-            uj.korok = 0;
+    Jatekos uj;
+    uj.nyeremeny = 0;
+    uj.korok = 0;
 
-            printf("Uj jatekos neve: ");
-            scanf("%s", uj.nev);
+    printf("Uj jatekos neve: ");
+    scanf("%s", uj.nev);
 
-            int index = letezik(jatekostomb, uj.nev);
-            if(index == -1){
-                jatekostomb.meret++;
-                //jatekosok = ujjatekos(jatekosok, uj);
-                jatekostomb.jatekosok = (Jatekos*)realloc(jatekostomb.jatekosok, jatekostomb.meret*sizeof(Jatekos));
-                jatekostomb.jatekosok[jatekostomb.meret-1] = uj;
+    int index = letezik(jatekostomb, uj.nev);
+    if(index == -1){
+        jatekostomb.meret++;
+        jatekostomb.jatekosok = (Jatekos*)realloc(jatekostomb.jatekosok, jatekostomb.meret*sizeof(Jatekos));
+        jatekostomb.jatekosok[jatekostomb.meret-1] = uj;
 
-                /*strcpy(jatekostomb.jatekosok[jatekostomb.meret-1].nev, uj.nev);
-                jatekostomb.jatekosok[jatekostomb.meret-1].nyeremeny = 0;
-                jatekostomb.jatekosok[jatekostomb.meret-1].korok = 0;*/
-
-                econio_clrscr();
-                kiir(jatekostomb);
-            }else{
-                printf("Mar van ilyen nevu jatekos!\n");
-            }
-            printf("Letrehozas - 0\n");
-            printf("Vissza - 9\n");
-            scanf("%d", &inp);
-
-        }else{
-            printf("Nincs ilyen menupont! Adj meg egy ujat!\n");
-            scanf("%d", &inp);
-        }
+        econio_clrscr();
+        kiir(jatekostomb);
+    }else{
+        printf("Mar van ilyen nevu jatekos!\n");
     }
 
     filebair(jatekostomb);
     return jatekostomb;
 }
 
-Jatekostomb jatekos(Jatekostomb jatekosok){
+Jatekostomb jatekos(Jatekostomb jatekostomb){
     econio_clrscr();
 
     int inp;
+    kiir(jatekostomb);
     printf("Jatekosok szerkesztese - 0\n");
     printf("Jatekosok letrehozasa - 1\n");
     printf("Vissza - 9\n");
@@ -220,15 +143,15 @@ Jatekostomb jatekos(Jatekostomb jatekosok){
         switch (inp)
         {
         case 0:        
-            if(jatekosok.meret != 0){
-                szerkesztes(jatekosok);
+            if(jatekostomb.meret != 0){
+                szerkesztes(jatekostomb);
             }else{
-                jatekosok = letrehozas(jatekosok);
+                jatekostomb = letrehozas(jatekostomb);
             }
             break;
         
         case 1:
-            jatekosok = letrehozas(jatekosok);
+            jatekostomb = letrehozas(jatekostomb);
             break;
         default:
             printf("Nincs ilyen menupont!");
@@ -237,11 +160,12 @@ Jatekostomb jatekos(Jatekostomb jatekosok){
         }
 
         econio_clrscr();
+        kiir(jatekostomb);
         printf("Jatekosok szerkesztese - 0\n");
         printf("Jatekosok letrehozasa - 1\n");
         printf("Vissza - 9\n");
         scanf("%d", &inp);
     }
 
-    return jatekosok;
+    return jatekostomb;
 }
