@@ -1,7 +1,7 @@
 int gyik();
 
 typedef struct Jatekos{
-    char nev[50];
+    char nev[20];
     int nyeremeny;
     int korok;
 } Jatekos;
