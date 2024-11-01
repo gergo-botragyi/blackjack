@@ -8,13 +8,14 @@ typedef struct Jatekban{
     int tet;
     char lapok[11]; //maximum kartyak szama egy jatekosnal
     int osszeg;
-    int jatszik;
+    int szek;
 } Jatekban;
 
 typedef struct Jatek{
     Jatekban *jatekosok;
     int meret;
     int botok;
+    int szekek[5];
 } Jatek;
 
 typedef struct Kartya{
@@ -44,16 +45,18 @@ void asztal(Jatek jatek){
     printf("------------------------------------------------------------------------------------------\n");
 
     int j = 0;
+    int szek = -1;
     for (int i = 1; i < jatek.meret; i++)
     {
-        if(jatek.jatekosok[i].jatszik){
-            econio_gotoxy((j)*20,5);
+        szek = jatek.jatekosok[i].szek;
+        if(szek != -1){
+            econio_gotoxy((szek)*20,5);
             printf("%d", jatek.jatekosok[i].osszeg);
 
-            econio_gotoxy((j)*20,6);
+            econio_gotoxy((szek)*20,6);
             printf("%s", jatek.jatekosok[i].lapok);
 
-            econio_gotoxy((j)*20,8); //max 20 karakter egy nev
+            econio_gotoxy((szek)*20,8); //max 20 karakter egy nev
             printf("%s", jatek.jatekosok[i].nev);
             j++;
         }
@@ -76,19 +79,18 @@ void removetext(int kezdsor, int vegsor){
     }
 }
 
-char* jatekoshozzaad(Jatekostomb jatekostomb){
+char* jatekosnev(Jatekostomb jatekostomb, char *nev){
     removetext(12, 18);
 
     econio_gotoxy(0,12);
     nevekkiir(jatekostomb);
     printf("Jatekos neve: ");
 
-    char nev[20];
     scanf("%s", nev);
 
     removetext(12, 12+(jatekostomb.meret));
 
-    return letezik(jatekostomb, nev)!=-1 ? nev : "#";
+    return nev;
 }
 
 int leultetve(Jatek jatek, char *nev){
@@ -104,50 +106,97 @@ int leultetve(Jatek jatek, char *nev){
 int jatszik(Jatek jatek, char *nev){
     for (int i = 0; i < jatek.meret; i++)
     {
-        if(strcmp(jatek.jatekosok[i].nev, nev)==0 && jatek.jatekosok[i].jatszik){
+        if(strcmp(jatek.jatekosok[i].nev, nev)==0 && jatek.jatekosok[i].szek != -1){
             return 1;
         }
     }
     return 0;
 }
 
+int uresszek(int *szekek){
+    for (int i = 0; i < 5; i++)
+    {
+        if(szekek[i] == 0){
+            return i;
+        }
+    }
+    return -1;
+}
+
+int asztalnal(int *szekek){
+    int foglalt = 0;
+    for (int i = 0; i < 5; i++)
+    {
+        if(szekek[i]!=0){foglalt++;}
+    }
+    return foglalt;
+}
+
+Jatek jatekhozad(Jatek jatek, int hely, char *nev){
+    jatek.meret++;
+    int meret = jatek.meret;
+    jatek.jatekosok = (Jatekban*)realloc(jatek.jatekosok, meret*sizeof(Jatekban));
+
+    strcpy(jatek.jatekosok[meret-1].nev, nev);
+    jatek.jatekosok[meret-1].tet = 0;
+    jatek.jatekosok[meret-1].osszeg = 0;
+    jatek.jatekosok[meret-1].szek = hely;
+    jatek.szekek[hely] = 1;
+    jatek.jatekosok[meret-1].lapok[0] = '\0';
+
+    return jatek;
+}
+
 Jatek leultetes(Jatek jatek, Jatekostomb jatekostomb, int bot){
     char nev[20]; //21-re atirni mindenhol
+    int letrehozott = 0;
     removetext(20,20); //Nincs ilyen jatekos miatt
     if(bot){
         sprintf(nev, "Bot%d", ++jatek.botok);
+        letrehozott = 1;
     }else{
-        strcpy(nev,jatekoshozzaad(jatekostomb)); //# ha nem letezik
+        strcpy(nev,jatekosnev(jatekostomb, nev));
+        letrehozott = letezik(jatekostomb, nev)!=-1;
     }
 
-    if(strcmp(nev, "#")!=0 && !leultetve(jatek, nev) && jatek.meret < 6){
-        //asztal(jatek);
+    int hely = uresszek(jatek.szekek);
+    int meret = jatek.meret;
+    
+    if(letrehozott && !leultetve(jatek, nev) && asztalnal(jatek.szekek) < 5){
+        return jatekhozad(jatek, hely, nev);
+    }
 
-        jatek.meret++;
-        jatek.jatekosok = (Jatekban*)realloc(jatek.jatekosok, jatek.meret*sizeof(Jatekban));
-
-        strcpy(jatek.jatekosok[jatek.meret-1].nev, nev);
-        jatek.jatekosok[jatek.meret-1].tet = 0;
-        jatek.jatekosok[jatek.meret-1].osszeg = 0;
-        jatek.jatekosok[jatek.meret-1].jatszik = 1;
-        jatek.jatekosok[jatek.meret-1].lapok[0] = '\0';
-    }else if(strcmp(nev, "#")!=0 && !jatszik(jatek, nev) && jatek.meret < 6){
-        for (int i = 0; i < jatek.meret; i++)
+    if(letrehozott && !jatszik(jatek, nev) && asztalnal(jatek.szekek) < 5){
+        for (int i = 0; i < meret; i++)
         {
             if(strcmp(jatek.jatekosok[i].nev, nev)==0){
-                jatek.jatekosok[i].jatszik = 1;
+                jatek.jatekosok[i].szek = hely;
+                jatek.szekek[hely] = 1;
             }
         }
+        return jatek;
+    }
+
+    if(!letrehozott && asztalnal(jatek.szekek) < 5){
+        econio_gotoxy(0,12);
+        printf("Ilyen jatekos nem letezik. Szeretned letrehozni? \nIgen - 0 \nNem - 1\n");
+        int inp;
+        scanf("%d", &inp);
+
+        if(inp == 0){
+            jatek = jatekhozad(jatek, hely, nev);
+        }
+        return jatek;
     }else{
         econio_gotoxy(0,20);
-        printf("Nem letezo/mar jatekban levo jatekos vagy nincs hely az asztalnal!");
+        printf("Ez a jatekos mar jatekban van vagy nincs hely az asztalnal!");
         econio_sleep(3);
     }
 
     return jatek;
 }
 
-Jatek felallitas(Jatek jatek){ //todo: sorrend csere
+Jatek felallitas(Jatek jatek){
     removetext(12, 18);
 
     econio_gotoxy(0,12);
@@ -160,7 +209,8 @@ Jatek felallitas(Jatek jatek){ //todo: sorrend csere
         for (int i = 0; i < jatek.meret; i++)
         {
             if(strcmp(jatek.jatekosok[i].nev, nev)==0){
-                jatek.jatekosok[i].jatszik = 0;
+                jatek.szekek[jatek.jatekosok[i].szek] = 0;
+                jatek.jatekosok[i].szek = -1;
             }
         }
     }else{
@@ -171,13 +221,26 @@ Jatek felallitas(Jatek jatek){ //todo: sorrend csere
     return jatek;
 }
 
+Jatekostomb frissjatekosok(Jatekostomb jatekostomb, Jatek jatek){
+    for (int i = 1; i < jatek.meret; i++) //1-tol mert az oszto nem kell
+    {
+        if(letezik(jatekostomb, jatek.jatekosok[i].nev)==-1){ //nem letezik
+            Jatekos uj = {{*jatek.jatekosok[i].nev}, 0, 0};
+            jatekostomb.meret++;
+            jatekostomb.jatekosok = (Jatekos*)realloc(jatekostomb.jatekosok, jatekostomb.meret*sizeof(Jatekos));
+            jatekostomb.jatekosok[jatekostomb.meret-1] = uj;
+        }
+    }
+    return jatekostomb;
+}
+
 Jatekostomb ujjatek(Jatekostomb jatekostomb){
     econio_clrscr();
-    Jatek jatek = {(Jatekban*)malloc(sizeof(Jatekban)), 1, 0};
+    Jatek jatek = {(Jatekban*)malloc(sizeof(Jatekban)), 1, 0, {0}};
     strcpy(jatek.jatekosok[0].nev, "Oszto");
     jatek.jatekosok[0].tet = 0;
     jatek.jatekosok[0].osszeg = 0;
-    jatek.jatekosok[0].jatszik = 1;
+    jatek.jatekosok[0].szek = -1;
     jatek.jatekosok[0].lapok[0] = '\0';
 
     int inp;
@@ -218,6 +281,8 @@ Jatekostomb ujjatek(Jatekostomb jatekostomb){
         }
         
     }
+
+    jatekostomb = frissjatekosok(jatekostomb,jatek);
 
     free(jatek.jatekosok);
     return jatekostomb;
