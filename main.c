@@ -7,7 +7,7 @@
 int szame(char *inp){
     for (int i = 0; i < strlen(inp); i++)
     {
-        if(isdigit(inp[i])==0){
+        if(inp[i]-'0'<0 && '9'-inp[i]<0){ //ascii kodok
             return 0;
         }
     }
