@@ -26,3 +26,5 @@ void removetext(int kezdsor, int vegsor);
 
 int filemeret();
 void beolvas(Jatekostomb jatekostomb);
+
+int szame(char *inp);

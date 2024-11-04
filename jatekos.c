@@ -132,17 +132,19 @@ Jatekostomb letrehozas(Jatekostomb jatekostomb){
 Jatekostomb jatekos(Jatekostomb jatekostomb){
     econio_clrscr();
 
-    int inp;
     kiir(jatekostomb);
     printf("Jatekosok szerkesztese - 0\n");
     printf("Jatekosok letrehozasa - 1\n");
     printf("Vissza - 9\n");
-    scanf("%d", &inp);
 
-    while(inp != 9){
-        switch (inp)
+    char inp[10];
+    scanf("%s", inp); 
+    if(!szame(inp)){inp[0] = 9;} //input vagy nem letezo menupont
+
+    while(inp[0] != '9'){
+        switch (inp[0])
         {
-        case 0:        
+        case '0':        
             if(jatekostomb.meret != 0){
                 szerkesztes(jatekostomb);
             }else{
@@ -150,7 +152,7 @@ Jatekostomb jatekos(Jatekostomb jatekostomb){
             }
             break;
         
-        case 1:
+        case '1':
             jatekostomb = letrehozas(jatekostomb);
             break;
         default:
@@ -164,7 +166,8 @@ Jatekostomb jatekos(Jatekostomb jatekostomb){
         printf("Jatekosok szerkesztese - 0\n");
         printf("Jatekosok letrehozasa - 1\n");
         printf("Vissza - 9\n");
-        scanf("%d", &inp);
+        scanf("%s", inp); 
+        if(!szame(inp)){inp[0] = '9';} //input vagy nem letezo menupont
     }
 
     return jatekostomb;

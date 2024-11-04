@@ -1,7 +1,18 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "functions.h"
 #include "econio.h"
 #include "debugmalloc.h"
+
+int szame(char *inp){
+    for (int i = 0; i < strlen(inp); i++)
+    {
+        if(isdigit(inp[i])==0){
+            return 0;
+        }
+    }
+    return 1;
+}
 
 int main(){
     FILE *file;
@@ -27,18 +38,19 @@ int main(){
     printf("GYIK - 2\n");
     printf("Kilepes - 3\n");
 
-    int inp;
-    scanf("%d", &inp);
-    while(inp!=3){
-        switch (inp)
+    char inp[10];
+    scanf("%s", inp); 
+    if(!szame(inp)){inp[0] = '9';} //input vagy nem letezo menupont
+    while(inp[0]!='3'){
+        switch (inp[0])
         {
-            case 0:
+            case '0':
                 jatekostomb = ujjatek(jatekostomb);
                 break;
-            case 1:
+            case '1':
                 jatekostomb = jatekos(jatekostomb);
                 break;
-            case 2:
+            case '2':
                 gyik();
                 break;
             default:
@@ -51,7 +63,8 @@ int main(){
         printf("Jatekosok - 1\n");
         printf("GYIK - 2\n");
         printf("Kilepes - 3\n");
-        scanf("%d", &inp);
+        scanf("%s", inp);
+        if(!szame(inp)){inp[0] = '9';} //input vagy nem letezo menupont
     }
 
     free(jatekostomb.jatekosok);

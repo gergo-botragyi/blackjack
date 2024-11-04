@@ -243,35 +243,28 @@ Jatekostomb ujjatek(Jatekostomb jatekostomb){
     jatek.jatekosok[0].szek = -1;
     jatek.jatekosok[0].lapok[0] = '\0';
 
-    int inp;
+    char inp[10];
+
     asztal(jatek);
     menu();
-    scanf("%d", &inp);
+    scanf("%s", inp); 
+    if(!szame(inp)){inp[0] = '9';} //input vagy nem letezo menupont
 
-    while(inp != 9){
-        switch (inp)
+    while(inp[0] != '9'){
+        switch (inp[0])
         {
-        case 0:
+        case '0':
             jatek = leultetes(jatek, jatekostomb, 0);
-            asztal(jatek);
-            menu();
-            scanf("%d", &inp);
             break;
-        case 1:
+        case '1':
             jatek = leultetes(jatek, jatekostomb, 1);
-            asztal(jatek);
-            menu();
-            scanf("%d", &inp);
             break;
-        case 2:
+        case '2':
             if(jatek.meret>1){
                 jatek = felallitas(jatek);
             }
-            asztal(jatek);
-            menu();
-            scanf("%d", &inp);
             break;
-        case 3:
+        case '3':
             break;
         
         default:
@@ -279,6 +272,10 @@ Jatekostomb ujjatek(Jatekostomb jatekostomb){
             econio_sleep(2);
             break;
         }
+        asztal(jatek);
+        menu();
+        scanf("%s", inp); 
+        if(!szame(inp)){inp[0] = '9';} //input vagy nem letezo menupont
         
     }
 
