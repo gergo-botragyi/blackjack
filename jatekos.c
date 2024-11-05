@@ -3,21 +3,30 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "functions.h"
+#include "jatekos.h"
+#include "main.h"
 #include "econio.h"
 #include "debugmalloc.h"
 
+//megmondja hany mentett jatekos van
+//megnyitja a jatekosok.txt fajlt
+//annak elso sorabol beolvassa, hogy hany mentett jatekost tartalmaz a fajl es azt visszaadja
 int filemeret(){
     FILE *file = fopen("jatekosok.txt", "r");
     if(file == NULL){return 0;}
 
-    int meret;
+    int meret = 0;
     fscanf(file, "%d" , &meret);
     fclose(file);
     return meret;
 }
 
-void beolvas(Jatekostomb jatekostomb){
+//beolvassa a jatekosokat fajlbol
+//bemenetkent egy jatekostombot kap egy ekkor ures jatekosokbol allo tombbel es egy merettel
+//megnyitja a jatekosok.txt faljt
+//az elso sor nem kell, mert a meretet mar tudjuk ekkor
+//soronkent beolvas es letrehoz egy uj jatekost, majd hozzaadja a tombhoz
+Jatekostomb beolvas(Jatekostomb jatekostomb){
     FILE *file = fopen("jatekosok.txt", "r");
     if(file == NULL){printf("Unable to read file! Check if file is missing!");}
     while(getc(file) != '\n'); //skip first line
@@ -29,8 +38,11 @@ void beolvas(Jatekostomb jatekostomb){
         jatekostomb.jatekosok[i] = uj;
     }
     fclose(file);
+    return jatekostomb;
 }
 
+//kiirja a kepernyore a jatekosok adatait
+//bemenetkent egy jatekostombot kap (jatekosok tomb es meret)
 void kiir(Jatekostomb jatekostomb){
     for (int i = 0; i < jatekostomb.meret; i++)
     {
@@ -38,6 +50,10 @@ void kiir(Jatekostomb jatekostomb){
     }
 }
 
+//elmenti a jatekosokat fajlba
+//bemenetkent egy jatekostombot kap (jatekosok tomb es meret)
+//megnyitja a jatekosok.txt fajlt
+//kiirja a fajlba eloszor a jatekosok szamat (meret) es utana minden sorba egy jatekos adatait
 void filebair(Jatekostomb jatekostomb){
     FILE *file = fopen("jatekosok.txt", "w");
     if(file == NULL){printf("Unable to open file!");return;}
@@ -50,6 +66,7 @@ void filebair(Jatekostomb jatekostomb){
     fclose(file);
 }
 
+//letrehoz egy jatekosok.txt nevu fajlt es beleirja az elso sorba, hogy 0 jatekos van
 void fileletrehoz(){
     FILE *file = fopen("jatekosok.txt", "w");
     if(file == NULL){printf("Unable to open file!");}
@@ -58,6 +75,9 @@ void fileletrehoz(){
     fclose(file);
 }
 
+//megnezi hogy letezik-e egy jatekos
+//bemenetkent kap egy jatekostombot (jatekosokbol allo tomb es meret) valamint egy nevet
+//vegigmeny a jatekosok tombon es megnezi, hogy a megadott nevvel letezik e olyan jatekos, ha igen visszaadja az indexet, ha nem -1-et
 int letezik(Jatekostomb jatekostomb, char *reginev){
     int i = 0;
     bool bennevan = false;
@@ -67,15 +87,19 @@ int letezik(Jatekostomb jatekostomb, char *reginev){
         }
         i++;
     }
-    return bennevan ? i-1 : -1;
+    return bennevan ? i-1 : -1; //index vagy -1
 }
 
+//jatekosok nevenek szerkesztese
+//bementkent kap egy jatekostombot (jatekosokbol allo tomb es meret)
+//kiirja a jatekosokat, beker egy szerkeszteni kivant jatekos nevet, es ha letezik atirja azt
+//visszaadja a jatekostombot
 Jatekostomb szerkesztes(Jatekostomb jatekostomb){
     econio_clrscr();
     kiir(jatekostomb);
 
-    char reginev[50];
-    char ujnev[50];
+    char reginev[21]; //max 20 karakter egy nev + lezaro nulla
+    char ujnev[21];
     econio_clrscr();
 
     kiir(jatekostomb);
@@ -97,6 +121,10 @@ Jatekostomb szerkesztes(Jatekostomb jatekostomb){
     return jatekostomb;
 }
 
+//jatekosokat lehet letrehozni
+//bemenetkent kap egy jatekostombot (jatekosokbol allo tomb es meret)
+//bekeri az uj jatekos nevet es ha meg nincs ilyen nevu jatekos akkor letrehozza es hozzaadja a listahoz
+//visszaadja a jatekostombot
 Jatekostomb letrehozas(Jatekostomb jatekostomb){
     econio_clrscr();
     if(jatekostomb.meret == 0){printf("Meg nincsenek letrehozott jatekosok!\n");}
@@ -129,6 +157,10 @@ Jatekostomb letrehozas(Jatekostomb jatekostomb){
     return jatekostomb;
 }
 
+//a fo jatekos menu 
+//megkapja a main-tol a jatekostombot (jatekosokbol allo tomb es merete)
+//valasztani lehet az kulonbozo menupontokbol
+//addig var uj inputra amig ki nem akarunk lepni es azt a szamot nem kapja inputnak, ekkor visszaadja a main-nek a jatekostombot
 Jatekostomb jatekos(Jatekostomb jatekostomb){
     econio_clrscr();
 
@@ -139,7 +171,7 @@ Jatekostomb jatekos(Jatekostomb jatekostomb){
 
     char inp[10];
     scanf("%s", inp); 
-    if(!szame(inp)){inp[0] = 9;} //input vagy nem letezo menupont
+    if(!szame(inp)){inp[0] = 8;} //input vagy nem letezo menupont
 
     while(inp[0] != '9'){
         switch (inp[0])

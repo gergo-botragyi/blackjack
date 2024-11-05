@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "functions.h"
+#include "gyik.h"
 #include "econio.h"
 #include "debugmalloc.h"
 

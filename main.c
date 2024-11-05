@@ -1,11 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "functions.h"
+
+#include "jatek.h"
+#include "jatekos.h"
+#include "gyik.h"
+#include "main.h"
 #include "econio.h"
 #include "debugmalloc.h"
 
 int szame(char *inp){
-    for (int i = 0; i < strlen(inp); i++)
+    int hossz = strlen(inp);
+    if(hossz > 1){return 0;}
+
+    for (int i = 0; i < hossz; i++)
     {
         if(inp[i]-'0'<0 && '9'-inp[i]<0){ //ascii kodok
             return 0;
@@ -26,8 +33,9 @@ int main(){
 
     int meret = filemeret();
     Jatekostomb jatekostomb = {(Jatekos*)calloc(meret, sizeof(Jatekos)), meret};
+    if(jatekostomb.jatekosok == NULL){return 0;}
     if(meret != 0){
-        beolvas(jatekostomb);
+        jatekostomb = beolvas(jatekostomb);
     }else{
         fileletrehoz();
     }

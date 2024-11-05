@@ -1,5 +1,8 @@
 #include <stdio.h>
-#include "functions.h"
+
+#include "jatek.h"
+#include "jatekos.h"
+#include "main.h"
 #include "econio.h"
 #include "debugmalloc.h"
 
@@ -237,6 +240,7 @@ Jatekostomb frissjatekosok(Jatekostomb jatekostomb, Jatek jatek){
 Jatekostomb ujjatek(Jatekostomb jatekostomb){
     econio_clrscr();
     Jatek jatek = {(Jatekban*)malloc(sizeof(Jatekban)), 1, 0, {0}};
+    if(jatek.jatekosok == NULL){return jatekostomb;}
     strcpy(jatek.jatekosok[0].nev, "Oszto");
     jatek.jatekosok[0].tet = 0;
     jatek.jatekosok[0].osszeg = 0;
@@ -248,7 +252,7 @@ Jatekostomb ujjatek(Jatekostomb jatekostomb){
     asztal(jatek);
     menu();
     scanf("%s", inp); 
-    if(!szame(inp)){inp[0] = '9';} //input vagy nem letezo menupont
+    if(!szame(inp)){inp[0] = '8';} //input vagy nem letezo menupont
 
     while(inp[0] != '9'){
         switch (inp[0])
