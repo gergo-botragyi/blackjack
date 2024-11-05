@@ -171,15 +171,15 @@ Jatekostomb jatekos(Jatekostomb jatekostomb){
 
     char inp[10];
     scanf("%s", inp); 
-    if(!szame(inp)){inp[0] = 8;} //input vagy nem letezo menupont
+    if(!szame(inp)){inp[0] = '8';} //ha nem szam vagy hosszabb mint 1 akkor nem letezo menupont
 
-    while(inp[0] != '9'){
+    while(inp[0] != '9'){ //9 a vissza
         switch (inp[0])
         {
         case '0':        
             if(jatekostomb.meret != 0){
                 szerkesztes(jatekostomb);
-            }else{
+            }else{ //ha meg nem leteznek jatekosok nincs kit szerkeszteni
                 jatekostomb = letrehozas(jatekostomb);
             }
             break;
@@ -199,7 +199,7 @@ Jatekostomb jatekos(Jatekostomb jatekostomb){
         printf("Jatekosok letrehozasa - 1\n");
         printf("Vissza - 9\n");
         scanf("%s", inp); 
-        if(!szame(inp)){inp[0] = '9';} //input vagy nem letezo menupont
+        if(!szame(inp)){inp[0] = '8';} //ha nem szam vagy hosszabb mint 1 akkor nem letezo menupont
     }
 
     return jatekostomb;

@@ -8,23 +8,26 @@
 #include "econio.h"
 #include "debugmalloc.h"
 
+//megnezi, hogy az input egyjegyu szam-e
+//bemenet az input, kimenet 0 vagy 1
 int szame(char *inp){
     int hossz = strlen(inp);
-    if(hossz > 1){return 0;}
+    if(hossz > 1){return 0;} //csak egyjegyu input van
 
     for (int i = 0; i < hossz; i++)
     {
-        if(inp[i]-'0'<0 && '9'-inp[i]<0){ //ascii kodok
+        if(inp[i]-'0'<0 && '9'-inp[i]<0){ //ha a 0 es a 9 ascii kodja koze esik akkor szam, ha nem akkor hamisat ad
             return 0;
         }
     }
     return 1;
 }
 
+//a fomenu function
 int main(){
     FILE *file;
     file = fopen("jatekosok.txt", "w");
-    fprintf(file, "4\n");
+    fprintf(file, "4\n"); //TESZTELESHEZ CSAK
     fprintf(file, "A 0000 0\n");
     fprintf(file, "B 1111 1\n");
     fprintf(file, "C 2222 2\n");
@@ -48,8 +51,8 @@ int main(){
 
     char inp[10];
     scanf("%s", inp); 
-    if(!szame(inp)){inp[0] = '9';} //input vagy nem letezo menupont
-    while(inp[0]!='3'){
+    if(!szame(inp)){inp[0] = '9';} //ha nem szam vagy hosszabb mint 1 akkor nem letezo menupont
+    while(inp[0]!='3'){ //3 a kilepes
         switch (inp[0])
         {
             case '0':
