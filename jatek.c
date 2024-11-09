@@ -264,8 +264,13 @@ Jatek felallitas(Jatek jatek){
 Jatekostomb frissjatekosok(Jatekostomb jatekostomb, Jatek jatek){
     for (int i = 1; i < jatek.meret; i++) //1-tol mert az oszto nem kell
     {
-        if(letezik(jatekostomb, jatek.jatekosok[i].nev)==-1){ //nem letezik
-            Jatekos uj = {{*jatek.jatekosok[i].nev}, 0, 0}; //gcc miatt kell dupla {} (bug), nem teljesen ertem
+        char *nev = jatek.jatekosok[i].nev;
+        if(strstr(nev, "Bot")==NULL && letezik(jatekostomb, nev)==-1){ //nem letezik es nem bot
+            Jatekos uj;
+            strcpy(uj.nev, nev);
+            uj.korok = 0;
+            uj.nyeremeny = 0;
+
             jatekostomb.meret++;
             jatekostomb.jatekosok = (Jatekos*)realloc(jatekostomb.jatekosok, jatekostomb.meret*sizeof(Jatekos));
             jatekostomb.jatekosok[jatekostomb.meret-1] = uj;
@@ -316,7 +321,7 @@ Jatekostomb ujjatek(Jatekostomb jatekostomb){
         
         default:
             printf("Nincs ilyen menupont!");
-            econio_sleep(2);
+            econio_sleep(3);
             break;
         }
         asztal(jatek);
@@ -326,8 +331,7 @@ Jatekostomb ujjatek(Jatekostomb jatekostomb){
         
     }
 
-    jatekostomb = frissjatekosok(jatekostomb,jatek); //torolheto? mar korabban mentve lettek
-
+    filebair(jatekostomb);
     free(jatek.jatekosok);
     return jatekostomb;
 }

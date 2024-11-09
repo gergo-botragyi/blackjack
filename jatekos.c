@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
 #include "jatekos.h"
 #include "main.h"
@@ -79,15 +78,13 @@ void fileletrehoz(){
 //bemenetkent kap egy jatekostombot (jatekosokbol allo tomb es meret) valamint egy nevet
 //vegigmeny a jatekosok tombon es megnezi, hogy a megadott nevvel letezik e olyan jatekos, ha igen visszaadja az indexet, ha nem -1-et
 int letezik(Jatekostomb jatekostomb, char *reginev){
-    int i = 0;
-    bool bennevan = false;
-    while(!bennevan && i < jatekostomb.meret){
+    for (int i = 0; i < jatekostomb.meret; i++)
+    {
         if(strcmp(jatekostomb.jatekosok[i].nev, reginev) == 0){
-            bennevan = true;
+            return i;
         }
-        i++;
     }
-    return bennevan ? i-1 : -1; //index vagy -1
+    return -1;
 }
 
 //jatekosok nevenek szerkesztese
@@ -106,18 +103,18 @@ Jatekostomb szerkesztes(Jatekostomb jatekostomb){
     printf("Szerkeszteni kivant jatekos neve: ");
     scanf("%s", reginev);
 
+    int index = letezik(jatekostomb, reginev);
+    if(index == -1){
+        printf("Nincs ilyen nevu jatekos!");
+        econio_sleep(3);
+        return jatekostomb;
+    }
+
     printf("Uj nev: ");
     scanf("%s", ujnev);
 
-    int index = letezik(jatekostomb, reginev);
-    if(index != -1){
-        strcpy(jatekostomb.jatekosok[index].nev, ujnev);
-    }else{
-        printf("Nincs ilyen nevu jatekos!");
-        econio_sleep(2);
-    }
+    strcpy(jatekostomb.jatekosok[index].nev, ujnev);
 
-    filebair(jatekostomb);
     return jatekostomb;
 }
 
@@ -151,9 +148,9 @@ Jatekostomb letrehozas(Jatekostomb jatekostomb){
         kiir(jatekostomb);
     }else{
         printf("Mar van ilyen nevu jatekos!\n");
+        econio_sleep(3);
     }
 
-    filebair(jatekostomb);
     return jatekostomb;
 }
 
@@ -189,7 +186,7 @@ Jatekostomb jatekos(Jatekostomb jatekostomb){
             break;
         default:
             printf("Nincs ilyen menupont!");
-            econio_sleep(2);
+            econio_sleep(3);
             break;
         }
 
@@ -202,5 +199,6 @@ Jatekostomb jatekos(Jatekostomb jatekostomb){
         if(!szame(inp)){inp[0] = '8';} //ha nem szam vagy hosszabb mint 1 akkor nem letezo menupont
     }
 
+    filebair(jatekostomb);
     return jatekostomb;
 }

@@ -47,12 +47,12 @@ int main(){
     printf("Uj jatek - 0\n");
     printf("Jatekosok - 1\n");
     printf("GYIK - 2\n");
-    printf("Kilepes - 3\n");
+    printf("Kilepes - 9\n");
 
     char inp[10];
     scanf("%s", inp); 
-    if(!szame(inp)){inp[0] = '9';} //ha nem szam vagy hosszabb mint 1 akkor nem letezo menupont
-    while(inp[0]!='3'){ //3 a kilepes
+    if(!szame(inp)){inp[0] = '8';} //ha nem szam vagy hosszabb mint 1 akkor nem letezo menupont
+    while(inp[0]!='9'){ //3 a kilepes
         switch (inp[0])
         {
             case '0':
@@ -66,16 +66,16 @@ int main(){
                 break;
             default:
                 printf("Nincs ilyen menupont!");
-                econio_sleep(2);
+                econio_sleep(3);
                 break;
         }
         econio_clrscr();
         printf("Uj jatek - 0\n");
         printf("Jatekosok - 1\n");
         printf("GYIK - 2\n");
-        printf("Kilepes - 3\n");
+        printf("Kilepes - 9\n");
         scanf("%s", inp);
-        if(!szame(inp)){inp[0] = '9';} //input vagy nem letezo menupont
+        if(!szame(inp)){inp[0] = '8';} //input vagy nem letezo menupont
     }
 
     free(jatekostomb.jatekosok);
