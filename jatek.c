@@ -10,7 +10,7 @@
 typedef struct Jatekban{
     char nev[21]; //max 20 karakter a nev + lezaro nulla
     int tet;
-    char lapok[11]; //maximum kartyak szama egy jatekosnal
+    char lapok[13]; //maximum kartyak szama egy jatekosnal
     int osszeg;
     int szek;
 } Jatekban;
@@ -293,8 +293,8 @@ Jatekostomb ujjatek(Jatekostomb jatekostomb){
 
     char inp[10];
 
-    asztal(jatek);
-    menu();
+    asztal(jatek); //asztal megjelenítése a képernyőn
+    menu(); //menü megjelenítése a képernyőn
     scanf("%s", inp); 
     if(!szame(inp)){inp[0] = '8';} //ha nem szam vagy hosszabb mint 1 akkor nem letezo menupont
 

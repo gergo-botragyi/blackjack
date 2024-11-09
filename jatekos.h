@@ -2,7 +2,7 @@
 #define JATEKOS_H
 
 typedef struct Jatekos{
-    char nev[20];
+    char nev[21]; //max 20 karakter egy név
     int nyeremeny;
     int korok;
 } Jatekos;

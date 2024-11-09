@@ -25,14 +25,16 @@ int szame(char *inp){
 
 //a fomenu function
 int main(){
+    //TESZTHEZ innentol
     FILE *file;
     file = fopen("jatekosok.txt", "w");
-    fprintf(file, "4\n"); //TESZTELESHEZ CSAK
+    fprintf(file, "4\n");
     fprintf(file, "A 0000 0\n");
     fprintf(file, "B 1111 1\n");
     fprintf(file, "C 2222 2\n");
     fprintf(file, "D 3333 3\n");
     fclose(file);
+    //idaig
 
     int meret = filemeret();
     Jatekostomb jatekostomb = {(Jatekos*)calloc(meret, sizeof(Jatekos)), meret};
