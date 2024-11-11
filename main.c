@@ -10,9 +10,9 @@
 
 //megnezi, hogy az input egyjegyu szam-e
 //bemenet az input, kimenet 0 vagy 1
-int szame(char *inp){
+int szame(char *inp, int menue){
     int hossz = strlen(inp);
-    if(hossz > 1){return 0;} //csak egyjegyu input van
+    if(menue && hossz > 1){return 0;} //csak egyjegyu input van
 
     for (int i = 0; i < hossz; i++)
     {
@@ -53,7 +53,7 @@ int main(){
 
     char inp[10];
     scanf("%s", inp); 
-    if(!szame(inp)){inp[0] = '8';} //ha nem szam vagy hosszabb mint 1 akkor nem letezo menupont
+    if(!szame(inp, 1)){inp[0] = '8';} //ha nem szam vagy hosszabb mint 1 akkor nem letezo menupont
     while(inp[0]!='9'){ //3 a kilepes
         switch (inp[0])
         {
@@ -77,7 +77,7 @@ int main(){
         printf("GYIK - 2\n");
         printf("Kilepes - 9\n");
         scanf("%s", inp);
-        if(!szame(inp)){inp[0] = '8';} //input vagy nem letezo menupont
+        if(!szame(inp, 1)){inp[0] = '8';} //input vagy nem letezo menupont
     }
 
     free(jatekostomb.jatekosok);

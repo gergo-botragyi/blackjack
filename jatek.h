@@ -3,6 +3,24 @@
 
 #include "jatekos.h"
 
+//jatekban levo jatekos strukturaja
+typedef struct Jatekban{
+    char nev[21]; //max 20 karakter a nev + lezaro nulla
+    int tet;
+    char lapok[13]; //maximum kartyak szama egy jatekosnal
+    int osszeg;
+    int szek;
+    int bot;
+} Jatekban;
+
+//jatek tomb strukturaja
+typedef struct Jatek{
+    Jatekban *jatekosok;
+    int meret; //jatekosok szama (akar akik nem ulnek asztalnal de mar korabban ultek)
+    int botok; //bot nev szamlalo
+    int szekek[5]; //melyik szeken ulnek (0 vagy 1)
+} Jatek;
+
 Jatekostomb ujjatek(Jatekostomb jatekostomb);
 
 void nevekkiir(Jatekostomb jatekosok);
