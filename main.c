@@ -7,6 +7,7 @@
 #include "main.h"
 #include "econio.h"
 #include "debugmalloc.h"
+#include "konzol.h"
 
 //megnezi, hogy az input egyjegyu szam-e
 //bemenet az input, kimenet 0 vagy 1
@@ -46,10 +47,7 @@ int main(){
     }
 
 
-    printf("Uj jatek - 0\n");
-    printf("Jatekosok - 1\n");
-    printf("GYIK - 2\n");
-    printf("Kilepes - 9\n");
+    mainmenu();
 
     char inp[10];
     scanf("%s", inp); 
@@ -72,10 +70,7 @@ int main(){
                 break;
         }
         econio_clrscr();
-        printf("Uj jatek - 0\n");
-        printf("Jatekosok - 1\n");
-        printf("GYIK - 2\n");
-        printf("Kilepes - 9\n");
+        mainmenu();
         scanf("%s", inp);
         if(!szame(inp, 1)){inp[0] = '8';} //input vagy nem letezo menupont
     }

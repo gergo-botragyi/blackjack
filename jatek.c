@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 
 #include "jatek.h"
 #include "jatekos.h"
@@ -6,64 +7,7 @@
 #include "jatekmenet.h"
 #include "econio.h"
 #include "debugmalloc.h"
-
-/*
-typedef struct Kartya{
-    char lap[2];
-    int db;
-} Kartya;*/
-
-//menu kiirasa
-void menu(){
-    printf("Jatekos hozzadasa - 0\n");
-    printf("Bot hozzadasa - 1\n");
-    printf("Jatekos/Bot eltavolitasa - 2\n");
-    printf("Jatek kezdese - 3\n");
-    printf("Vissza - 9\n");
-}
-
-//asztal kiirasa
-//bemenet a jatek tomb
-void asztal(Jatek jatek){
-    econio_clrscr();
-
-    econio_gotoxy(42, 0); //elso sorban az asztal kozepere irjuk ki az osztot
-    printf("Dealer\n");
-    printf("------------------------------------------------------------------------------------------\n");
-    econio_gotoxy(44, 2); //az oszto lapjait is kozepre kell kiirni
-    printf("%s\n", jatek.jatekosok[0].lapok);
-    econio_gotoxy(44, 3); //az oszto osszege is kozepre megy
-    if(jatek.jatekosok[0].osszeg != 0){
-        printf("%d", jatek.jatekosok[0].osszeg); 
-    }
-    printf("\n\n\n\n"); //a sok uj sor az asztal helye (merete)
-
-    printf("------------------------------------------------------------------------------------------\n");
-
-    int szek = -1; //az adott jatekos szeke, hogy ne kelljen folyton lekerni (-1-re inicializalva biztonsagbol)
-    for (int i = 1; i < jatek.meret; i++)//minden jatekos neve, lapjai es lapjainak osszegenek kiirasa
-    {
-        szek = jatek.jatekosok[i].szek;
-        if(szek != -1){
-            econio_gotoxy((szek)*20,5); //a szeke sorszama*20 karakterrel toljuk jobbra, mivel 20 karakter max egy nev
-            if(jatek.jatekosok[i].osszeg != 0){
-                printf("%d", jatek.jatekosok[i].osszeg);
-            }
-
-            econio_gotoxy((szek)*20,6);
-            printf("%s", jatek.jatekosok[i].lapok);
-
-            econio_gotoxy((szek)*20,8);
-            printf("%s", jatek.jatekosok[i].nev);
-
-            econio_gotoxy((szek)*20,9);
-            if(jatek.jatekosok[i].tet != 0){
-                printf("%d", jatek.jatekosok[i].tet);
-            }
-        }
-    }
-    printf("\n\n\n\n"); //asztal alatti terulet
-}
+#include "konzol.h"
 
 //kiirja a mentett neveket a kepernyore
 //bemenet az eddig mentett jatekostomb (ami ugye a fajlban levo neveket ismeri)
@@ -148,7 +92,7 @@ int asztalnal(int *szekek){
     int foglalt = 0;
     for (int i = 0; i < 5; i++)
     {
-        if(szekek[i]==1){foglalt++;}
+        if(szekek[i]!=0){foglalt++;}
     }
     return foglalt;
 }
@@ -163,11 +107,9 @@ Jatek jatekhozad(Jatek jatek, int hely, char *nev, int bot){
     jatek.jatekosok = (Jatekban*)realloc(jatek.jatekosok, meret*sizeof(Jatekban));
 
     strcpy(jatek.jatekosok[meret-1].nev, nev);
-    jatek.jatekosok[meret-1].tet = 0;
-    jatek.jatekosok[meret-1].osszeg = 0;
+    jatek.jatekosok[meret-1].nyeremeny = 0;
     jatek.jatekosok[meret-1].szek = hely;
-    jatek.szekek[hely] = 1;
-    jatek.jatekosok[meret-1].lapok[0] = '\0';
+    jatek.szekek[hely] = meret-1; //szeknel tarolja a jatekos indexet kesobbre
     jatek.jatekosok[meret-1].bot = bot;
 
     return jatek;
@@ -181,7 +123,7 @@ Jatek leultetes(Jatek jatek, Jatekostomb jatekostomb, int bot){
     char nev[21];
     int letrehozott = 0;
     removetext(20,20); //jatekban van vagy nincs hely az asztalnal kiiras eltuntetese (20. sor)
-    if(bot){
+    if(bot != 0){
         sprintf(nev, "Bot%d", ++jatek.botok);
         letrehozott = 1;
     }else{
@@ -197,11 +139,11 @@ Jatek leultetes(Jatek jatek, Jatekostomb jatekostomb, int bot){
     }
 
     if(letrehozott && !jatszik(jatek, nev) && asztalnal(jatek.szekek) < 5){ //ismeri a nevet, volt mar asztalnal de nem jatszik jelenleg es van hely
-        for (int i = 0; i < meret; i++)
+        for (int i = 1; i < meret; i++)
         {
             if(strcmp(jatek.jatekosok[i].nev, nev)==0){
                 jatek.jatekosok[i].szek = hely;
-                jatek.szekek[hely] = 1;
+                jatek.szekek[hely] = i; //szeknel tarolja a jatekos indexet kesobbre
             }
         }
         return jatek;
@@ -239,7 +181,7 @@ Jatek felallitas(Jatek jatek){
     scanf("%s", nev);
 
     if(jatszik(jatek, nev)){ //ha jatszik akkor -1 a jatekos szeke, az adott szek pedig 0 mert ures lesz
-        for (int i = 0; i < jatek.meret; i++)
+        for (int i = 1; i < jatek.meret; i++)
         {
             if(strcmp(jatek.jatekosok[i].nev, nev)==0){
                 jatek.szekek[jatek.jatekosok[i].szek] = 0;
@@ -260,7 +202,7 @@ Jatekostomb frissjatekosok(Jatekostomb jatekostomb, Jatek jatek){
     for (int i = 1; i < jatek.meret; i++) //1-tol mert az oszto nem kell
     {
         char *nev = jatek.jatekosok[i].nev;
-        if(!jatek.jatekosok[i].bot && letezik(jatekostomb, nev)==-1){ //nem letezik es nem bot
+        if(jatek.jatekosok[i].bot == 0 && letezik(jatekostomb, nev)==-1){ //nem letezik es nem bot
             Jatekos uj;
             strcpy(uj.nev, nev);
             uj.korok = 0;
@@ -274,23 +216,73 @@ Jatekostomb frissjatekosok(Jatekostomb jatekostomb, Jatek jatek){
     return jatekostomb;
 }
 
+Jatekostomb adatmentes(Jatekostomb jatekostomb, Jatek jatek){
+    for (int i = 1; i < jatek.meret; i++){
+        if(jatek.jatekosok[i].bot == 0){
+            for (int j = 0; j < jatekostomb.meret; j++)
+            {
+                if(strcmp(jatekostomb.jatekosok[j].nev, jatek.jatekosok[i].nev) == 0){
+                    jatekostomb.jatekosok[j].korok++;
+                    jatekostomb.jatekosok[j].nyeremeny += jatek.jatekosok[i].nyeremeny;
+                }
+            }
+        }
+    }
+    return jatekostomb;
+}
+
+Asztal asztalletrehoz(Jatek jatek, Asztal asztal){
+    strcpy(asztal.jatekosok[0].nev, "Oszto");
+    asztal.jatekosok[0].tet = 0;
+    memset(asztal.jatekosok[0].lapok, ' ', 12*sizeof(char)); //oszto lapjai kezdetben "uresek"
+    asztal.jatekosok[0].osszeg = 0;
+    asztal.jatekosok[0].szek = -1;
+    asztal.jatekosok[0].bot = 17; //az oszto 17-nel kell megalljon
+
+    int j = 1;
+    for (int i = 1; i < jatek.meret; i++)
+    {
+        if(jatek.jatekosok[i].szek != -1){
+            strcpy(asztal.jatekosok[j].nev, jatek.jatekosok[i].nev);
+            asztal.jatekosok[j].tet = 0;
+            memset(asztal.jatekosok[j].lapok, ' ', 12*sizeof(char)); //lapjai kezdetben "uresek"
+            asztal.jatekosok[j].osszeg = 0;
+            asztal.jatekosok[j].szek = jatek.jatekosok[i].szek;
+            asztal.jatekosok[j].bot = jatek.jatekosok[i].bot;
+            j++;
+        }
+    }
+    asztal.meret = j+1;
+    return asztal;
+}
+
+Jatek asztalment(Jatek jatek, Asztal asztal){    
+    for (int i = 1; i < jatek.meret; i++)
+    {
+        int index = jatek.szekek[asztal.jatekosok[i].szek]; //a jatek.szek tarolja a jatekos indexet aki ott ul
+        jatek.jatekosok[index].nyeremeny = asztal.jatekosok[i].tet; 
+    }
+    return jatek;
+}
+
 //egy uj jatek inditasaert felelos function es egyben almenu
 //bemenet a jatekostomb amit vissza is ad, hogy menteni tudja
 Jatekostomb ujjatek(Jatekostomb jatekostomb){
-    econio_clrscr();
+    srand(time(NULL));
+    Asztal asztal = {(Asztalnal*)malloc(6*sizeof(Asztalnal)), 0};
+
     Jatek jatek = {(Jatekban*)malloc(sizeof(Jatekban)), 1, 0, {0}}; //kezdetben eleg egy egy elemu tomb az osztonak, tobbi ertek: lasd fenti struct
     if(jatek.jatekosok == NULL){return jatekostomb;}
     strcpy(jatek.jatekosok[0].nev, "Oszto"); //oszto inicializalasa
-    jatek.jatekosok[0].tet = 0;
-    jatek.jatekosok[0].osszeg = 0;
+    jatek.jatekosok[0].nyeremeny = 0;
     jatek.jatekosok[0].szek = -1;
-    jatek.jatekosok[0].lapok[0] = '\0';
     jatek.jatekosok[0].bot = 0;
 
     char inp[10];
 
-    asztal(jatek); //asztal megjelenítése a képernyőn
-    menu(); //menü megjelenítése a képernyőn
+    econio_clrscr();
+    asztalrajz(jatek); //asztal megjelenítése a képernyőn
+    jatekmenu(); //menü megjelenítése a képernyőn
     scanf("%s", inp); 
     if(!szame(inp,1)){inp[0] = '8';} //ha nem szam vagy hosszabb mint 1 akkor nem letezo menupont
 
@@ -302,7 +294,7 @@ Jatekostomb ujjatek(Jatekostomb jatekostomb){
             jatekostomb = frissjatekosok(jatekostomb,jatek); //potencialis uj jatekosok mentese
             break;
         case '1':
-            jatek = leultetes(jatek, jatekostomb, 1); //bot leultetese
+            jatek = leultetes(jatek, jatekostomb, (rand()%(17 - 15 +1)+15)); //bot leultetese (random valtozo 15 es 17 kozott a bot jatekstilusa (mire nem ker mar lapot))
             jatekostomb = frissjatekosok(jatekostomb,jatek);
             break;
         case '2':
@@ -312,7 +304,10 @@ Jatekostomb ujjatek(Jatekostomb jatekostomb){
             }
             break;
         case '3':
-            jatek = jatekmenet(jatek);
+            asztal = asztalletrehoz(jatek, asztal);
+            asztal = jatekmenet(asztal);
+            jatek = asztalment(jatek, asztal);
+            jatekostomb = adatmentes(jatekostomb, jatek);
             break;
         
         default:
@@ -320,14 +315,15 @@ Jatekostomb ujjatek(Jatekostomb jatekostomb){
             econio_sleep(3);
             break;
         }
-        asztal(jatek);
-        menu();
+        asztalrajz(jatek);
+        jatekmenu();
         scanf("%s", inp); 
         if(!szame(inp,1)){inp[0] = '8';} //ha nem szam vagy hosszabb mint 1 akkor nem letezo menupont
         
     }
 
     filebair(jatekostomb);
+    free(asztal.jatekosok);
     free(jatek.jatekosok);
     return jatekostomb;
 }

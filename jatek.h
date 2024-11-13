@@ -6,9 +6,7 @@
 //jatekban levo jatekos strukturaja
 typedef struct Jatekban{
     char nev[21]; //max 20 karakter a nev + lezaro nulla
-    int tet;
-    char lapok[13]; //maximum kartyak szama egy jatekosnal
-    int osszeg;
+    int nyeremeny;
     int szek;
     int bot;
 } Jatekban;

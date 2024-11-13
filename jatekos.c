@@ -6,6 +6,7 @@
 #include "main.h"
 #include "econio.h"
 #include "debugmalloc.h"
+#include "konzol.h"
 
 //megmondja hany mentett jatekos van
 //megnyitja a jatekosok.txt fajlt
@@ -162,9 +163,7 @@ Jatekostomb jatekos(Jatekostomb jatekostomb){
     econio_clrscr();
 
     kiir(jatekostomb);
-    printf("Jatekosok szerkesztese - 0\n");
-    printf("Jatekosok letrehozasa - 1\n");
-    printf("Vissza - 9\n");
+    jatekosmenu();
 
     char inp[10];
     scanf("%s", inp); 
@@ -192,9 +191,7 @@ Jatekostomb jatekos(Jatekostomb jatekostomb){
 
         econio_clrscr();
         kiir(jatekostomb);
-        printf("Jatekosok szerkesztese - 0\n");
-        printf("Jatekosok letrehozasa - 1\n");
-        printf("Vissza - 9\n");
+        jatekosmenu();
         scanf("%s", inp); 
         if(!szame(inp,1)){inp[0] = '8';} //ha nem szam vagy hosszabb mint 1 akkor nem letezo menupont
     }
