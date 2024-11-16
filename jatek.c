@@ -12,9 +12,11 @@
 //kiirja a mentett neveket a kepernyore
 //bemenet az eddig mentett jatekostomb (ami ugye a fajlban levo neveket ismeri)
 void nevekkiir(Jatekostomb jatekostomb){
+    Jatekos *mozgo = jatekostomb.jatekosok;
     for (int i = 0; i < jatekostomb.meret; i++)
     {
-        printf("Jatekos: %s\n", jatekostomb.jatekosok[i].nev);
+        printf("Jatekos: %s\n", mozgo->nev);
+        mozgo = mozgo->kov;
     }
 }
 
@@ -128,7 +130,7 @@ Jatek leultetes(Jatek jatek, Jatekostomb jatekostomb, int bot){
         letrehozott = 1;
     }else{
         strcpy(nev,jatekosnev(jatekostomb, nev));
-        letrehozott = letezik(jatekostomb, nev)!=-1; //megnezi, hogy korabban volt e mar mentve (fajlba irva) a jatekos neve
+        letrehozott = letezik(jatekostomb, nev)!=NULL; //megnezi, hogy korabban volt e mar mentve (fajlba irva) a jatekos neve
     }
 
     int hely = uresszek(jatek.szekek);
@@ -202,33 +204,31 @@ Jatekostomb frissjatekosok(Jatekostomb jatekostomb, Jatek jatek){
     for (int i = 1; i < jatek.meret; i++) //1-tol mert az oszto nem kell
     {
         char *nev = jatek.jatekosok[i].nev;
-        if(jatek.jatekosok[i].bot == 0 && letezik(jatekostomb, nev)==-1){ //nem letezik es nem bot
-            Jatekos uj;
-            strcpy(uj.nev, nev);
-            uj.korok = 0;
-            uj.nyeremeny = 0;
+        if(jatek.jatekosok[i].bot == 0 && letezik(jatekostomb, nev)==NULL){ //nem letezik es nem bot
+            Jatekos *uj = (Jatekos*)malloc(sizeof(Jatekos));
+            strcpy(uj->nev, nev);
+            uj->korok = 0;
+            uj->nyeremeny = 0;
+            uj->kov = NULL;
 
             jatekostomb.meret++;
-            jatekostomb.jatekosok = (Jatekos*)realloc(jatekostomb.jatekosok, jatekostomb.meret*sizeof(Jatekos));
-            jatekostomb.jatekosok[jatekostomb.meret-1] = uj;
+            jatekoshozzaad(jatekostomb.jatekosok, uj);
         }
     }
     return jatekostomb;
 }
 
-Jatekostomb adatmentes(Jatekostomb jatekostomb, Jatek jatek){
-    for (int i = 1; i < jatek.meret; i++){
-        if(jatek.jatekosok[i].bot == 0){
-            for (int j = 0; j < jatekostomb.meret; j++)
-            {
-                if(strcmp(jatekostomb.jatekosok[j].nev, jatek.jatekosok[i].nev) == 0){
-                    jatekostomb.jatekosok[j].korok++;
-                    jatekostomb.jatekosok[j].nyeremeny += jatek.jatekosok[i].nyeremeny;
-                }
+void adatmentes(Jatekostomb jatekostomb, Jatek jatek){
+    Jatekos *mozgo = jatekostomb.jatekosok;
+    while(mozgo!=NULL){
+        for (int i = 1; i < jatek.meret; i++){
+            if(jatek.jatekosok[i].bot == 0 && strcmp(mozgo->nev, jatek.jatekosok[i].nev) == 0){
+                mozgo->korok++;
+                mozgo->nyeremeny += jatek.jatekosok[i].nyeremeny;
             }
         }
+        mozgo = mozgo->kov;
     }
-    return jatekostomb;
 }
 
 Asztal asztalletrehoz(Jatek jatek, Asztal asztal){
@@ -252,7 +252,7 @@ Asztal asztalletrehoz(Jatek jatek, Asztal asztal){
             j++;
         }
     }
-    asztal.meret = j+1;
+    asztal.meret = j;
     return asztal;
 }
 
@@ -307,7 +307,9 @@ Jatekostomb ujjatek(Jatekostomb jatekostomb){
             asztal = asztalletrehoz(jatek, asztal);
             asztal = jatekmenet(asztal);
             jatek = asztalment(jatek, asztal);
-            jatekostomb = adatmentes(jatekostomb, jatek);
+            printf("w2");
+            adatmentes(jatekostomb, jatek);
+            printf("w");
             break;
         
         default:

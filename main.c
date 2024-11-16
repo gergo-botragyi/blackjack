@@ -38,8 +38,7 @@ int main(){
     //idaig
 
     int meret = filemeret();
-    Jatekostomb jatekostomb = {(Jatekos*)calloc(meret, sizeof(Jatekos)), meret};
-    if(jatekostomb.jatekosok == NULL){return 0;}
+    Jatekostomb jatekostomb = {NULL, meret};
     if(meret != 0){
         jatekostomb = beolvas(jatekostomb);
     }else{
@@ -75,6 +74,6 @@ int main(){
         if(!szame(inp, 1)){inp[0] = '8';} //input vagy nem letezo menupont
     }
 
-    free(jatekostomb.jatekosok);
+    felszabadit(jatekostomb.jatekosok);
     return 0;
 }
