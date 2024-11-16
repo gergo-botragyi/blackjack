@@ -43,9 +43,100 @@ Asztal tetek(Asztal asztal){
     return asztal;
 }
 
+Asztalnal lapotkap(Asztalnal jatekos, char lapok[14][3]){
+    
+    int index = (rand()%(13-0+1)+0);
+    if(index < 10){
+        jatekos.osszeg+=index+1;
+    }else if(index != 13){
+        jatekos.osszeg+=10;
+    }else if(jatekos.osszeg+11>21){
+        jatekos.osszeg+=1;
+    }else{jatekos.osszeg+=11;}
+
+    strcat(jatekos.lapok, lapok[index]);
+    strcat(jatekos.lapok, " ");
+
+    return jatekos;
+}
+
+Asztal osztas(Asztal asztal, char lapok[14][3], int leforditott){
+    for (int i = 1; i < asztal.meret; i++)
+    {
+        asztal.jatekosok[i] = lapotkap(asztal.jatekosok[i], lapok);
+
+        int szek = asztal.jatekosok[i].szek;
+        econio_gotoxy(szek*20,5);
+        printf("%d", asztal.jatekosok[i].osszeg);
+
+        econio_gotoxy(szek*20,6);
+        printf("%s", asztal.jatekosok[i].lapok);
+
+        econio_sleep(1);
+    }
+    asztal.jatekosok[0] = lapotkap(asztal.jatekosok[0], lapok);
+
+    if(!leforditott){
+        econio_gotoxy(42,3);
+        printf("%d", asztal.jatekosok[0].osszeg);
+
+        econio_gotoxy(42,2);
+        printf("%s", asztal.jatekosok[0].lapok);
+
+        econio_sleep(1);
+        asztal = osztas(asztal, lapok, 1);
+    }
+    return asztal;
+}
+
 Asztal jatekmenet(Asztal asztal){
     srand(time(NULL));
+    char lapok[14][3]  = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
+
     asztal = tetek(asztal);
+    asztal = osztas(asztal, lapok, 0);
+
+    for (int i = 1; i < asztal.meret; i++)
+    {
+        char inp[10];
+        
+        removetext(12,15);
+        lapmenu();
+        scanf("%s", inp); 
+        if(!szame(inp,1)){inp[0] = '8';} //ha nem szam vagy hosszabb mint 1 akkor nem letezo menupont
+
+        while(asztal.jatekosok[i].osszeg<21 && inp[0]!=1){
+            switch (inp[0])
+            {
+            case 0:
+                asztal.jatekosok[i] = lapotkap(asztal.jatekosok[i], lapok); 
+                break;
+            case 2:
+                if(strlen(asztal.jatekosok[i].lapok)==5){
+                    asztal.jatekosok[i].tet *= 2;
+                    inp[0] = '8';
+                }
+                break;
+            case 3:
+                if(strlen(asztal.jatekosok[i].lapok)==5){
+                    asztal.jatekosok[i].tet *= -0.5;
+                    inp[0] = '8';
+                }
+            default:
+                printf("Nincs ilyen menupont!");
+                econio_sleep(3);
+                break;
+            }
+
+            removetext(16,16);
+
+            if(inp[0] != '8'){
+                scanf("%s", inp); 
+                if(!szame(inp,1)){inp[0] = '8';}
+            }
+        }
+    }
+    
     //nyeremeny osszeget itt kell meghatarozni (tet szorzodik)
     econio_sleep(3);
     return asztal;

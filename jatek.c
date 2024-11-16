@@ -234,7 +234,7 @@ void adatmentes(Jatekostomb jatekostomb, Jatek jatek){
 Asztal asztalletrehoz(Jatek jatek, Asztal asztal){
     strcpy(asztal.jatekosok[0].nev, "Oszto");
     asztal.jatekosok[0].tet = 0;
-    memset(asztal.jatekosok[0].lapok, ' ', 12*sizeof(char)); //oszto lapjai kezdetben "uresek"
+    asztal.jatekosok[0].lapok[0] = '\0'; //oszto lapjai kezdetben "uresek"
     asztal.jatekosok[0].osszeg = 0;
     asztal.jatekosok[0].szek = -1;
     asztal.jatekosok[0].bot = 17; //az oszto 17-nel kell megalljon
@@ -245,7 +245,7 @@ Asztal asztalletrehoz(Jatek jatek, Asztal asztal){
         if(jatek.jatekosok[i].szek != -1){
             strcpy(asztal.jatekosok[j].nev, jatek.jatekosok[i].nev);
             asztal.jatekosok[j].tet = 0;
-            memset(asztal.jatekosok[j].lapok, ' ', 12*sizeof(char)); //lapjai kezdetben "uresek"
+            asztal.jatekosok[j].lapok[0] = '\0'; //lapjai kezdetben "uresek"
             asztal.jatekosok[j].osszeg = 0;
             asztal.jatekosok[j].szek = jatek.jatekosok[i].szek;
             asztal.jatekosok[j].bot = jatek.jatekosok[i].bot;

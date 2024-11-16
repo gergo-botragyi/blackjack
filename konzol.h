@@ -9,6 +9,6 @@ void mainmenu();
 void jatekmenu();
 //void asztaladatok(Asztal asztal);
 void asztalrajz(Jatek jatek);
-
+void lapmenu();
 
 #endif
