@@ -12,6 +12,7 @@
 void jatekosmenu(){
     printf("Jatekosok szerkesztese - 0\n");
     printf("Jatekosok letrehozasa - 1\n");
+    printf("Jatekos torlese - 2\n");
     printf("Vissza - 9\n");
 }
 

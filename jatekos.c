@@ -152,6 +152,7 @@ void jatekoshozzaad(Jatekos *eleje, Jatekos *uj){
     mozgo->kov = uj;
 }
 
+
 //jatekosokat lehet letrehozni
 //bemenetkent kap egy jatekostombot (jatekosokbol allo tomb es meret)
 //bekeri az uj jatekos nevet es ha meg nincs ilyen nevu jatekos akkor letrehozza es hozzaadja a listahoz
@@ -159,8 +160,6 @@ void jatekoshozzaad(Jatekos *eleje, Jatekos *uj){
 Jatekostomb letrehozas(Jatekostomb jatekostomb){
     econio_clrscr();
     if(jatekostomb.meret == 0){printf("Meg nincsenek letrehozott jatekosok!\n");}
-
-    kiir(jatekostomb);
 
     econio_clrscr();
     kiir(jatekostomb);
@@ -188,6 +187,47 @@ Jatekostomb letrehozas(Jatekostomb jatekostomb){
     return jatekostomb;
 }
 
+Jatekostomb jatekostorol(Jatekostomb jatekostomb, char *nev){
+    Jatekos *lemarado = NULL;
+    Jatekos *mozgo = jatekostomb.jatekosok;
+    while(mozgo!=NULL && strcmp(mozgo->nev, nev) != 0){
+        lemarado = mozgo;
+        mozgo = mozgo->kov;
+    }
+    if(mozgo==NULL){
+        return jatekostomb;
+    }else if(lemarado == NULL){
+        Jatekos *ujeleje = mozgo->kov;
+        free(mozgo);
+        jatekostomb.jatekosok = ujeleje;
+        jatekostomb.meret--;
+    }else{
+        jatekostomb.meret--;
+        lemarado->kov = mozgo->kov;
+        free(mozgo);
+    }
+    return jatekostomb;
+}
+
+Jatekostomb torles(Jatekostomb jatekostomb){
+    econio_clrscr();
+    kiir(jatekostomb);
+
+    char nev[21];
+    printf("Torlendo jatekos neve: ");
+    scanf("%s", nev);
+
+    Jatekos *keresett = letezik(jatekostomb, nev);
+    if(keresett != NULL){
+        jatekostomb = jatekostorol(jatekostomb, nev);
+    }else{
+        printf("Nem letezik ilyen nevu jatekos!\n");
+        econio_sleep(3);
+    }
+    
+    return jatekostomb;
+}
+
 //a fo jatekos menu 
 //megkapja a main-tol a jatekostombot (jatekosokbol allo tomb es merete)
 //valasztani lehet az kulonbozo menupontokbol
@@ -212,9 +252,13 @@ Jatekostomb jatekos(Jatekostomb jatekostomb){
                 jatekostomb = letrehozas(jatekostomb);
             }
             break;
-        
         case '1':
             jatekostomb = letrehozas(jatekostomb);
+            break;
+        case '2':
+            if(jatekostomb.meret != 0){
+                jatekostomb = torles(jatekostomb);
+            }
             break;
         default:
             printf("Nincs ilyen menupont!");
