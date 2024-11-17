@@ -31,6 +31,11 @@ void vesztett(Asztalnal jatekos){
     printf("Vesztett!");
 }
 
+void nyert(Asztalnal jatekos){
+    econio_gotoxy(jatekos.szek*20, 10);
+    printf("Nyert!");
+}
+
 Asztal tetek(Asztal asztal){
     for (int i = 1; i < asztal.meret; i++)
     {
@@ -175,8 +180,32 @@ Asztal jatekmenet(Asztal asztal){
         removetext(16,17);
         lapmenu();
     }
-    
-    //nyeremeny osszeget itt kell meghatarozni (tet szorzodik)
+    removetext(12,17);
+
+    lapotkiir(asztal.jatekosok[0],1);
+    while(asztal.jatekosok[0].bot>asztal.jatekosok[0].laposszeg && asztal.jatekosok[0].laposszeg<21){
+        asztal.jatekosok[0] = lapotkap(asztal.jatekosok[0], lapok);
+        lapotkiir(asztal.jatekosok[0], 1);
+    }
+
+    int osztolaposszeg = asztal.jatekosok[0].laposszeg;
+    int jatekoslaposszeg;
+    for (int i = 1; i < asztal.meret; i++)
+    {
+        jatekoslaposszeg = asztal.jatekosok[i].laposszeg;
+        if(!asztal.jatekosok[i].vesztett){
+            if(osztolaposszeg>21 || jatekoslaposszeg > osztolaposszeg){
+                asztal.jatekosok[i].tet *= 2;
+                nyert(asztal.jatekosok[i]);
+            }else if(osztolaposszeg>jatekoslaposszeg){
+                asztal.jatekosok[i].tet *= -1;
+                vesztett(asztal.jatekosok[i]);
+            }else if(jatekoslaposszeg == 21 && osztolaposszeg != 21){
+                asztal.jatekosok[i].tet *= 3/2;
+                nyert(asztal.jatekosok[i]);
+            }else{asztal.jatekosok[i].tet = 0;}
+        }
+    }
     
     econio_sleep(5);
     return asztal;

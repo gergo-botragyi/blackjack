@@ -278,7 +278,7 @@ Jatekostomb ujjatek(Jatekostomb jatekostomb){
     strcpy(jatek.jatekosok[0].nev, "Oszto"); //oszto inicializalasa
     jatek.jatekosok[0].nyeremeny = 0;
     jatek.jatekosok[0].szek = -1;
-    jatek.jatekosok[0].bot = 0;
+    jatek.jatekosok[0].bot = (rand()%(17 - 15 +1)+15);
 
     char inp[10];
 

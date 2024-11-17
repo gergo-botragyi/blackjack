@@ -84,8 +84,6 @@ void asztalrajz(Jatek jatek){
         if(jatek.jatekosok[i].szek != -1){
             econio_gotoxy((jatek.jatekosok[i].szek)*20,8);
             printf("%s", jatek.jatekosok[i].nev);
-            econio_gotoxy((jatek.jatekosok[i].szek)*20,10);
-            printf("%d", jatek.jatekosok[i].bot);
         }
     }
     
