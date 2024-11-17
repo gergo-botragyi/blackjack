@@ -1,13 +1,20 @@
 #ifndef JATEKMENET_H
 #define JATEKMENET_H
 
+typedef struct Kartya{
+    char lap[3];
+    int ertek;
+} Kartya;
+
 typedef struct Asztalnal{
     char nev[21];
     int tet;
-    char lapok[13]; //maximum kartyak szama egy jatekosnal
-    int osszeg;
+    Kartya lapok[12]; //maximum kartyak szama +1 egy jatekosnal
+    short lapszam;
+    int laposszeg;
     int szek;
     int bot;
+    short vesztett;
 } Asztalnal;
 
 typedef struct Asztal{

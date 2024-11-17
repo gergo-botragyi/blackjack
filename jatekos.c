@@ -75,6 +75,7 @@ void filebair(Jatekostomb jatekostomb){
     for (int i = 0; i < jatekostomb.meret; i++)
     {
         fprintf(file, "%s %d %d\n", mozgo->nev, mozgo->nyeremeny, mozgo->korok);
+        mozgo = mozgo->kov;
     }
     fclose(file);
 }

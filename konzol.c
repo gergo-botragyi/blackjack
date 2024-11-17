@@ -84,6 +84,8 @@ void asztalrajz(Jatek jatek){
         if(jatek.jatekosok[i].szek != -1){
             econio_gotoxy((jatek.jatekosok[i].szek)*20,8);
             printf("%s", jatek.jatekosok[i].nev);
+            econio_gotoxy((jatek.jatekosok[i].szek)*20,10);
+            printf("%d", jatek.jatekosok[i].bot);
         }
     }
     
@@ -95,5 +97,5 @@ void lapmenu(){
     printf("Hit - 0\n");
     printf("Stand - 1\n");
     printf("Double - 2\n");
-    printf("Surrender - 3");
+    printf("Surrender - 3\n");
 }

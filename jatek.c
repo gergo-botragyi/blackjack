@@ -234,10 +234,11 @@ void adatmentes(Jatekostomb jatekostomb, Jatek jatek){
 Asztal asztalletrehoz(Jatek jatek, Asztal asztal){
     strcpy(asztal.jatekosok[0].nev, "Oszto");
     asztal.jatekosok[0].tet = 0;
-    asztal.jatekosok[0].lapok[0] = '\0'; //oszto lapjai kezdetben "uresek"
-    asztal.jatekosok[0].osszeg = 0;
+    asztal.jatekosok[0].laposszeg = 0;
+    asztal.jatekosok[0].lapszam = 0;
     asztal.jatekosok[0].szek = -1;
     asztal.jatekosok[0].bot = 17; //az oszto 17-nel kell megalljon
+    asztal.jatekosok[0].vesztett = 0;
 
     int j = 1;
     for (int i = 1; i < jatek.meret; i++)
@@ -245,10 +246,11 @@ Asztal asztalletrehoz(Jatek jatek, Asztal asztal){
         if(jatek.jatekosok[i].szek != -1){
             strcpy(asztal.jatekosok[j].nev, jatek.jatekosok[i].nev);
             asztal.jatekosok[j].tet = 0;
-            asztal.jatekosok[j].lapok[0] = '\0'; //lapjai kezdetben "uresek"
-            asztal.jatekosok[j].osszeg = 0;
+            asztal.jatekosok[j].lapszam = 0;
+            asztal.jatekosok[j].laposszeg = 0;
             asztal.jatekosok[j].szek = jatek.jatekosok[i].szek;
             asztal.jatekosok[j].bot = jatek.jatekosok[i].bot;
+            asztal.jatekosok[j].vesztett = 0;
             j++;
         }
     }
@@ -260,7 +262,7 @@ Jatek asztalment(Jatek jatek, Asztal asztal){
     for (int i = 1; i < jatek.meret; i++)
     {
         int index = jatek.szekek[asztal.jatekosok[i].szek]; //a jatek.szek tarolja a jatekos indexet aki ott ul
-        jatek.jatekosok[index].nyeremeny = asztal.jatekosok[i].tet; 
+        jatek.jatekosok[index].nyeremeny += asztal.jatekosok[i].tet; 
     }
     return jatek;
 }
@@ -307,9 +309,7 @@ Jatekostomb ujjatek(Jatekostomb jatekostomb){
             asztal = asztalletrehoz(jatek, asztal);
             asztal = jatekmenet(asztal);
             jatek = asztalment(jatek, asztal);
-            printf("w2");
             adatmentes(jatekostomb, jatek);
-            printf("w");
             break;
         
         default:
