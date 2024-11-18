@@ -36,6 +36,11 @@ void nyert(Asztalnal jatekos){
     printf("Nyert!");
 }
 
+void dontetlen(Asztalnal jatekos){
+    econio_gotoxy(jatekos.szek*20, 10);
+    printf("Dontetlen!");
+}
+
 Asztal tetek(Asztal asztal){
     for (int i = 1; i < asztal.meret; i++)
     {
@@ -43,7 +48,7 @@ Asztal tetek(Asztal asztal){
         econio_gotoxy(0,12);
         if(asztal.jatekosok[i].bot != 0){
             //rand() % (max - min + 1) + min -- a minimum maximum ertekek miatt, ezutan 10-zel osztva, hogy valodibb legyen
-            asztal.jatekosok[i].tet = rand() % (20000 - 500 + 1) + 500;
+            asztal.jatekosok[i].tet = rand() % (5000 - 500 + 1) + 500;
             tetkiir(asztal.jatekosok[i]);
         }
         else{
@@ -110,7 +115,7 @@ Asztal jatekmenet(Asztal asztal){
 
     Kartya lapok[] = {
         {.lap = "2",.ertek=2},{.lap="3",.ertek=3},
-        {.lap = "4",.ertek=5},{.lap="5",.ertek=5},
+        {.lap = "4",.ertek=4},{.lap="5",.ertek=5},
         {.lap = "6",.ertek=6},{.lap="7",.ertek=7},
         {.lap = "8",.ertek=8},{.lap="9",.ertek=9},
         {.lap = "10",.ertek=10},{.lap="J",.ertek=10},
@@ -124,18 +129,20 @@ Asztal jatekmenet(Asztal asztal){
     for (int i = 1; i < asztal.meret; i++)
     {
         char inp[10];
+        int botlep = asztal.jatekosok[i].bot > asztal.jatekosok[i].laposszeg;
 
-        if(asztal.jatekosok[i].bot > 0 && asztal.jatekosok[i].bot > asztal.jatekosok[i].laposszeg){inp[0] = '0';}
-        else if(asztal.jatekosok[i].bot > 0 && asztal.jatekosok[i].bot <= asztal.jatekosok[i].laposszeg){inp[0] = '1';}
+        if(botlep){inp[0] = '0'; econio_sleep(1);}
+        else if(asztal.jatekosok[i].bot > 0 && !botlep){inp[0] = '1';econio_sleep(1);}
         
-        if(inp[0]!='0'&&inp[0]!='1'){
-            removetext(12,15);
-            lapmenu();
+        if(asztal.jatekosok[i].bot == 0 && asztal.jatekosok[i].laposszeg < 21){
+            removetext(12,16);
+            lapmenu(asztal.jatekosok[i]);
             scanf("%s", inp); 
             if(!szame(inp,1)){inp[0] = '8';} //ha nem szam vagy hosszabb mint 1 akkor nem letezo menupont
         }
 
         while(inp[0]!='1' && asztal.jatekosok[i].laposszeg<21){
+            botlep = asztal.jatekosok[i].bot > asztal.jatekosok[i].laposszeg;
             switch (inp[0])
             {
             case '0':
@@ -146,7 +153,7 @@ Asztal jatekmenet(Asztal asztal){
                     vesztett(asztal.jatekosok[i]);
                     inp[0] = '1';
                 }
-                if(asztal.jatekosok[i].bot != 0){econio_sleep(1);}
+                if(asztal.jatekosok[i].bot > 0){econio_sleep(1);}
                 break;
             case '2':
                 if(asztal.jatekosok[i].lapszam == 2){
@@ -169,23 +176,29 @@ Asztal jatekmenet(Asztal asztal){
                 break;
             }
 
-            removetext(16,17);
-            lapmenu();
+            removetext(17,18);
+            lapmenu(asztal.jatekosok[i]);
 
             if(inp[0] != '1' && asztal.jatekosok[i].bot==0){
                 scanf("%s", inp); 
                 if(!szame(inp,1)){inp[0] = '8';}
+            }else if(botlep && asztal.jatekosok[i].bot>0){
+                inp[0] = '0';
+            }else{
+                inp[0] = '1';
             }
         }
-        removetext(16,17);
-        lapmenu();
+        removetext(17,18);
+        lapmenu(asztal.jatekosok[i]);
     }
-    removetext(12,17);
+    removetext(12,18);
 
     lapotkiir(asztal.jatekosok[0],1);
+    econio_sleep(1);
     while(asztal.jatekosok[0].bot>asztal.jatekosok[0].laposszeg && asztal.jatekosok[0].laposszeg<21){
         asztal.jatekosok[0] = lapotkap(asztal.jatekosok[0], lapok);
         lapotkiir(asztal.jatekosok[0], 1);
+        econio_sleep(1);
     }
 
     int osztolaposszeg = asztal.jatekosok[0].laposszeg;
@@ -203,10 +216,19 @@ Asztal jatekmenet(Asztal asztal){
             }else if(jatekoslaposszeg == 21 && osztolaposszeg != 21){
                 asztal.jatekosok[i].tet *= 3/2;
                 nyert(asztal.jatekosok[i]);
-            }else{asztal.jatekosok[i].tet = 0;}
+            }else{
+                asztal.jatekosok[i].tet = 0;
+                dontetlen(asztal.jatekosok[i]);
+            }
         }
     }
     
-    econio_sleep(5);
+    econio_gotoxy(0,18);
+    printf("Nyomj entert a tovabblepeshez!");
+    char enter = 0;
+    fflush(stdin);
+    while(enter!='\n' && enter != '\r'){
+        enter = getchar();
+    };
     return asztal;
 }

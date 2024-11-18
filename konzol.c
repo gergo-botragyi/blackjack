@@ -91,8 +91,9 @@ void asztalrajz(Jatek jatek){
     printf("\n\n\n\n"); //asztal alatti terulet
 }
 
-void lapmenu(){
+void lapmenu(Asztalnal jatekos){
     econio_gotoxy(0,12);
+    printf("Jatekos: %s\n", jatekos.nev);
     printf("Hit - 0\n");
     printf("Stand - 1\n");
     printf("Double - 2\n");
