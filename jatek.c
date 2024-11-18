@@ -15,7 +15,7 @@ void nevekkiir(Jatekostomb jatekostomb){
     Jatekos *mozgo = jatekostomb.jatekosok;
     for (int i = 0; i < jatekostomb.meret; i++)
     {
-        printf("Jatekos: %s\n", mozgo->nev);
+        printf("Jatekos: %s%s%s\n","\033[0;32m", mozgo->nev,"\033[0m");
         mozgo = mozgo->kov;
     }
 }
@@ -25,7 +25,7 @@ void removetext(int kezdsor, int vegsor){
     for (int i = kezdsor; i <= vegsor; i++)
     {
         econio_gotoxy(0,i);
-        printf("%50s", "");
+        printf("%50s\r", "");
     }
 }
 
@@ -39,7 +39,9 @@ char* jatekosnev(Jatekostomb jatekostomb, char *nev){
     nevekkiir(jatekostomb);
     printf("Jatekos neve: ");
 
+    econio_textcolor(COL_GREEN);
     scanf("%s", nev);
+    econio_textcolor(COL_LIGHTGRAY);
 
     removetext(12, 12+(jatekostomb.meret));
 
@@ -153,9 +155,11 @@ Jatek leultetes(Jatek jatek, Jatekostomb jatekostomb, int bot){
 
     if(!letrehozott && asztalnal(jatek.szekek) < 5){ //ha egy vadiuj jatekost akarna leultetni
         econio_gotoxy(0,12);
-        printf("Ilyen jatekos nem letezik. Szeretned letrehozni? \nIgen - 0 \nNem - 1\n");
+        printf("Ilyen jatekos nem letezik. Szeretned letrehozni? \nIgen - %s0%s \nNem - %s1%s\n","\033[0;34m","\033[0m","\033[0;34m","\033[0m");
         int inp;
+        econio_textcolor(COL_BLUE);
         scanf("%d", &inp);
+        econio_textcolor(COL_LIGHTGRAY);
 
         if(inp == 0){
             jatek = jatekhozad(jatek, hely, nev, bot);
@@ -163,7 +167,7 @@ Jatek leultetes(Jatek jatek, Jatekostomb jatekostomb, int bot){
         return jatek;
     }else{
         econio_gotoxy(0,20);
-        printf("Ez a jatekos mar jatekban van vagy nincs hely az asztalnal!");
+        printf("%sEz a jatekos mar jatekban van vagy nincs hely az asztalnal!%s","\033[1;31m","\033[0m");
         econio_sleep(3);
     }
 
@@ -180,7 +184,9 @@ Jatek felallitas(Jatek jatek){
     printf("Jatekos neve: ");
 
     char nev[21];
+    econio_textcolor(COL_GREEN);
     scanf("%s", nev);
+    econio_textcolor(COL_LIGHTGRAY);
 
     if(jatszik(jatek, nev)){ //ha jatszik akkor -1 a jatekos szeke, az adott szek pedig 0 mert ures lesz
         for (int i = 1; i < jatek.meret; i++)
@@ -192,7 +198,7 @@ Jatek felallitas(Jatek jatek){
         }
     }else{
         econio_gotoxy(0,20);
-        printf("Ez a jatekos nem ul az asztalnal!");
+        printf("%sEz a jatekos nem ul az asztalnal!%s","\033[1;31m","\033[0m");
         econio_sleep(3);
     }
     return jatek;
@@ -285,7 +291,9 @@ Jatekostomb ujjatek(Jatekostomb jatekostomb){
     econio_clrscr();
     asztalrajz(jatek); //asztal megjelenítése a képernyőn
     jatekmenu(); //menü megjelenítése a képernyőn
-    scanf("%s", inp); 
+    econio_textcolor(COL_BLUE);
+    scanf("%s", inp);
+    econio_textcolor(COL_LIGHTGRAY);
     if(!szame(inp,1)){inp[0] = '8';} //ha nem szam vagy hosszabb mint 1 akkor nem letezo menupont
 
     while(inp[0] != '9'){ //9 a vissza
@@ -310,16 +318,19 @@ Jatekostomb ujjatek(Jatekostomb jatekostomb){
             asztal = jatekmenet(asztal);
             jatek = asztalment(jatek, asztal);
             adatmentes(jatekostomb, jatek);
+            filebair(jatekostomb);
             break;
         
         default:
-            printf("Nincs ilyen menupont!");
+            printf("%sNincs ilyen menupont!%s","\033[1;31m","\033[0m");
             econio_sleep(3);
             break;
         }
         asztalrajz(jatek);
         jatekmenu();
-        scanf("%s", inp); 
+        econio_textcolor(COL_BLUE);
+        scanf("%s", inp);
+        econio_textcolor(COL_LIGHTGRAY);
         if(!szame(inp,1)){inp[0] = '8';} //ha nem szam vagy hosszabb mint 1 akkor nem letezo menupont
         
     }

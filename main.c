@@ -26,6 +26,7 @@ int szame(char *inp, int menue){
 
 //a fomenu function
 int main(){
+    econio_set_title("Blackjack");
     //TESZTHEZ innentol
     FILE *file;
     file = fopen("jatekosok.txt", "w");
@@ -64,7 +65,7 @@ int main(){
                 gyik();
                 break;
             default:
-                printf("Nincs ilyen menupont!");
+                printf("%sNincs ilyen menupont!%s","\033[1;31m", "\033[0m");
                 econio_sleep(3);
                 break;
         }

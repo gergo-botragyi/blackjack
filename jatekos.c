@@ -56,9 +56,11 @@ Jatekostomb beolvas(Jatekostomb jatekostomb){
 void kiir(Jatekostomb jatekostomb){
     Jatekos *mozgo = jatekostomb.jatekosok;
     while(mozgo!=NULL){
-        printf("Nev: %s \nNyert osszeg: %d \nJatszott korok: %d\n\n", mozgo->nev, mozgo->nyeremeny, mozgo->korok);
-        mozgo = mozgo->kov;
+        printf("Nev: %s%s%s\n", "\033[0;32m", mozgo->nev, "\033[0m");
+        printf("Nyert osszeg: %s%d%s\n", "\033[0;33m", mozgo->nyeremeny, "\033[0m");
+        printf("Jatszott korok: %s%d%s\n\n", "\033[0;31m", mozgo->korok, "\033[0m");
 
+        mozgo = mozgo->kov;
     }
 }
 
@@ -126,17 +128,21 @@ Jatekostomb szerkesztes(Jatekostomb jatekostomb){
 
     kiir(jatekostomb);
     printf("Szerkeszteni kivant jatekos neve: ");
+    econio_textcolor(COL_GREEN);
     scanf("%s", reginev);
+    econio_textcolor(COL_LIGHTGRAY);
 
     Jatekos *keresett = letezik(jatekostomb, reginev);
     if(keresett == NULL){
-        printf("Nincs ilyen nevu jatekos!");
+        printf("%sNincs ilyen nevu jatekos!%s", "\033[1;31m","\033[0m");
         econio_sleep(3);
         return jatekostomb;
     }
 
     printf("Uj nev: ");
+    econio_textcolor(COL_GREEN);
     scanf("%s", ujnev);
+    econio_textcolor(COL_LIGHTGRAY);
 
     strcpy(keresett->nev, ujnev);
 
@@ -159,7 +165,7 @@ void jatekoshozzaad(Jatekos *eleje, Jatekos *uj){
 //visszaadja a jatekostombot
 Jatekostomb letrehozas(Jatekostomb jatekostomb){
     econio_clrscr();
-    if(jatekostomb.meret == 0){printf("Meg nincsenek letrehozott jatekosok!\n");}
+    if(jatekostomb.meret == 0){printf("%sMeg nincsenek letrehozott jatekosok!%s\n", "\033[1;31m", "\033[0m");}
 
     econio_clrscr();
     kiir(jatekostomb);
@@ -170,7 +176,9 @@ Jatekostomb letrehozas(Jatekostomb jatekostomb){
     uj->kov = NULL;
 
     printf("Uj jatekos neve: ");
+    econio_textcolor(COL_GREEN);
     scanf("%s", uj->nev);
+    econio_textcolor(COL_LIGHTGRAY);
 
     Jatekos *keresett = letezik(jatekostomb, uj->nev);
     if(keresett == NULL){
@@ -180,7 +188,7 @@ Jatekostomb letrehozas(Jatekostomb jatekostomb){
         econio_clrscr();
         kiir(jatekostomb);
     }else{
-        printf("Mar van ilyen nevu jatekos!\n");
+        printf("%sMar van ilyen nevu jatekos!%s\n", "\033[1;31m", "\033[0m");
         econio_sleep(3);
     }
 
@@ -215,13 +223,15 @@ Jatekostomb torles(Jatekostomb jatekostomb){
 
     char nev[21];
     printf("Torlendo jatekos neve: ");
+    econio_textcolor(COL_GREEN);
     scanf("%s", nev);
+    econio_textcolor(COL_LIGHTGRAY);
 
     Jatekos *keresett = letezik(jatekostomb, nev);
     if(keresett != NULL){
         jatekostomb = jatekostorol(jatekostomb, nev);
     }else{
-        printf("Nem letezik ilyen nevu jatekos!\n");
+        printf("%sNem letezik ilyen nevu jatekos!%s\n","\033[1;31m", "\033[0m");
         econio_sleep(3);
     }
     
@@ -261,7 +271,7 @@ Jatekostomb jatekos(Jatekostomb jatekostomb){
             }
             break;
         default:
-            printf("Nincs ilyen menupont!");
+            printf("%sNincs ilyen menupont!%s", "\033[1;31m", "\033[0m");
             econio_sleep(3);
             break;
         }

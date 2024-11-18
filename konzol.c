@@ -10,62 +10,66 @@
 //jatekos
 //jatekos menu kiirasa
 void jatekosmenu(){
-    printf("Jatekosok szerkesztese - 0\n");
-    printf("Jatekosok letrehozasa - 1\n");
-    printf("Jatekos torlese - 2\n");
-    printf("Vissza - 9\n");
+    printf("Jatekosok szerkesztese - ");
+    econio_textcolor(COL_BLUE);
+    printf("0%s\n","\033[0m");
+
+    printf("Jatekosok letrehozasa - ");
+    econio_textcolor(COL_BLUE);
+    printf("1%s\n","\033[0m");
+
+    printf("Jatekos torlese - ");
+    econio_textcolor(COL_BLUE);
+    printf("2%s\n","\033[0m");
+
+    printf("Vissza - ");
+    econio_textcolor(COL_BLUE);
+    printf("9%s\n","\033[0m");
 }
 
 //main
 //menu kiirasa
 void mainmenu(){
-    printf("Uj jatek - 0\n");
-    printf("Jatekosok - 1\n");
-    printf("GYIK - 2\n");
-    printf("Kilepes - 9\n");
+    printf("Uj jatek - ");
+    econio_textcolor(COL_BLUE);
+    printf("0%s\n","\033[0m");
+
+    printf("Jatekosok - ");
+    econio_textcolor(COL_BLUE);
+    printf("1%s\n","\033[0m");
+
+    printf("GYIK - ");
+    econio_textcolor(COL_BLUE);
+    printf("2%s\n","\033[0m");
+
+    printf("Kilepes - ");
+    econio_textcolor(COL_BLUE);
+    printf("9%s\n","\033[0m");
 }
 
 //jatek
 //menu kiirasa
 void jatekmenu(){
-    printf("Jatekos hozzadasa - 0\n");
-    printf("Bot hozzadasa - 1\n");
-    printf("Jatekos/Bot eltavolitasa - 2\n");
-    printf("Jatek kezdese - 3\n");
-    printf("Vissza - 9\n");
+    printf("Jatekos hozzadasa - ");
+    econio_textcolor(COL_BLUE);
+    printf("0%s\n","\033[0m");
+
+    printf("Bot hozzadasa - ");
+    econio_textcolor(COL_BLUE);
+    printf("1%s\n","\033[0m");
+
+    printf("Jatekos/Bot eltavolitasa - ");
+    econio_textcolor(COL_BLUE);
+    printf("2%s\n","\033[0m");
+
+    printf("Jatek kezdese - ");
+    econio_textcolor(COL_BLUE);
+    printf("3%s\n","\033[0m");
+
+    printf("Vissza - ");
+    econio_textcolor(COL_BLUE);
+    printf("9%s\n","\033[0m");
 }
-
-//jatekmenet
-//asztalra a jatekosok adatainak kiirasa (bemenet az asztalnal jatekban levo jatekosok)
-/*void asztaladatok(Asztalnal *asztal){
-    econio_gotoxy(44, 2); //az oszto lapjait kozepre kell kiirni
-    printf("%s\n", asztal[0].lapok);
-
-    econio_gotoxy(44, 3); //az oszto osszege is kozepre megy
-    if(asztal[0].osszeg != 0){
-        printf("%d", asztal[0].osszeg); 
-    }
-
-    int szek = -1; //az adott jatekos szeke, hogy ne kelljen folyton lekerni (-1-re inicializalva biztonsagbol)
-    for (int i = 1; i < 6; i++)//minden jatekos lapjai lapjainak osszege es tetje kiirasa
-    {
-        szek = asztal[i].szek;
-        if(szek != -1){
-            econio_gotoxy((szek)*20,5); //a szeke sorszama*20 karakterrel toljuk jobbra, mivel 20 karakter max egy nev
-            if(asztal[i].osszeg != 0){
-                printf("%d", asztal[i].osszeg);
-            }
-
-            econio_gotoxy((szek)*20,6);
-            printf("%s", asztal[i].lapok);
-
-            econio_gotoxy((szek)*20,9);
-            if(asztal[i].tet != 0){
-                printf("%d", asztal[i].tet);
-            }
-        }
-    }
-}*/
 
 //jatek
 //asztal rajzanak kiirasa (nevekkel)
@@ -73,18 +77,27 @@ void jatekmenu(){
 void asztalrajz(Jatek jatek){
     econio_clrscr();
 
-    econio_gotoxy(42, 0); //elso sorban az asztal kozepere irjuk ki az osztot
-    printf("Oszto\n");
-    printf("------------------------------------------------------------------------------------------\n");
-    printf("\n\n\n\n\n"); //a sok uj sor az asztal helye (merete)
-
-    printf("------------------------------------------------------------------------------------------\n");
+    econio_gotoxy(48, 0); //elso sorban az asztal kozepere irjuk ki az osztot
+    printf("%sOszto%s\n","\033[1;31m","\033[0m");
+    econio_textbackground(COL_GREEN);
+    econio_textcolor(COL_BLACK);
+    printf("----------------------------------------------------------------------------------------------------\n");
+    econio_textcolor(COL_BLUE);
+    printf("%100s\r\n", "");//a sok uj sor az asztal helye (merete)
+    printf("%100s\r\n", "");
+    printf("%100s\r\n", "");
+    printf("%100s\r\n", "");
+    printf("%100s\r\n", "");
+    econio_textcolor(COL_BLACK);
+    printf("----------------------------------------------------------------------------------------------------\n");
+    econio_textbackground(COL_BLACK);
+    econio_textcolor(COL_LIGHTGRAY);
 
     for (int i = 1; i < jatek.meret; i++)
     {
         if(jatek.jatekosok[i].szek != -1){
             econio_gotoxy((jatek.jatekosok[i].szek)*20,8);
-            printf("%s", jatek.jatekosok[i].nev);
+            printf("%s%s%s", "\033[0;34m",jatek.jatekosok[i].nev,"\033[0m");
         }
     }
     
@@ -93,9 +106,23 @@ void asztalrajz(Jatek jatek){
 
 void lapmenu(Asztalnal jatekos){
     econio_gotoxy(0,12);
-    printf("Jatekos: %s\n", jatekos.nev);
-    printf("Hit - 0\n");
-    printf("Stand - 1\n");
-    printf("Double - 2\n");
-    printf("Surrender - 3\n");
+    printf("Jatekos: ");
+    econio_textcolor(COL_GREEN);
+    printf("%s%s\n", jatekos.nev, "\033[0m");
+
+    printf("Hit - ");
+    econio_textcolor(COL_BLUE);
+    printf("0%s\n","\033[0m");
+
+    printf("Stand - ");
+    econio_textcolor(COL_BLUE);
+    printf("1%s\n","\033[0m");
+
+    printf("Double - ");
+    econio_textcolor(COL_BLUE);
+    printf("2%s\n","\033[0m");
+
+    printf("Surrender - ");
+    econio_textcolor(COL_BLUE);
+    printf("3%s\n","\033[0m");
 }

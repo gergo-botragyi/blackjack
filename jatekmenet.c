@@ -12,33 +12,42 @@
 
 void tetkiir(Asztalnal jatekos){
     econio_gotoxy((jatekos.szek)*20,9);
-    printf("%d", jatekos.tet);
+    printf("%s%d%s","\033[0;33m", jatekos.tet,"\033[0m");
 }
 
 void lapotkiir(Asztalnal jatekos, int oszto){
-    if(oszto){econio_gotoxy(42,3);}else{econio_gotoxy(jatekos.szek*20,5);}
-    printf("%d", jatekos.laposszeg);
+    if(oszto){econio_gotoxy(48,3);}else{econio_gotoxy(jatekos.szek*20,5);}
+    econio_textbackground(COL_GREEN);
+    printf("%s[%d]%s", "\033[1;37m", jatekos.laposszeg,"\033[0m");
+    
 
-    if(oszto){econio_gotoxy(42,2);}else{econio_gotoxy(jatekos.szek*20,6);}
+    if(oszto){econio_gotoxy(48,2);}else{econio_gotoxy(jatekos.szek*20,6);}
     for (int i = 0; i < jatekos.lapszam; i++)
     {
+        if(rand()%(1-0+1)+0){
+            printf("\033[42m\033[1;34m"); //blue
+        }else{
+            printf("\033[42m\033[1;31m"); //red
+        }
         printf("%s ", jatekos.lapok[i].lap);
     }
+    econio_textcolor(COL_LIGHTGRAY);
+    econio_textbackground(COL_BLACK);
 }
 
 void vesztett(Asztalnal jatekos){
     econio_gotoxy(jatekos.szek*20, 10);
-    printf("Vesztett!");
+    printf("%sVesztett!%s","\033[1;31m","\033[0m");
 }
 
 void nyert(Asztalnal jatekos){
     econio_gotoxy(jatekos.szek*20, 10);
-    printf("Nyert!");
+    printf("%sNyert!%s","\033[1;32m","\033[0m");
 }
 
 void dontetlen(Asztalnal jatekos){
     econio_gotoxy(jatekos.szek*20, 10);
-    printf("Dontetlen!");
+    printf("%sDontetlen!%s","\033[1;34m","\033[0m");
 }
 
 Asztal tetek(Asztal asztal){
@@ -50,14 +59,17 @@ Asztal tetek(Asztal asztal){
             //rand() % (max - min + 1) + min -- a minimum maximum ertekek miatt, ezutan 10-zel osztva, hogy valodibb legyen
             asztal.jatekosok[i].tet = rand() % (5000 - 500 + 1) + 500;
             tetkiir(asztal.jatekosok[i]);
+            econio_sleep(1);
         }
         else{
             char tet[21];
             do
             {
-                printf("Jatekos: %s\n", asztal.jatekosok[i].nev);
+                printf("Jatekos: %s%s%s\n","\033[0;32m", asztal.jatekosok[i].nev,"\033[0m");
                 printf("Tet: ");
+                econio_textcolor(COL_YELLOW);
                 scanf("%s", tet);
+                econio_textcolor(COL_LIGHTGRAY);
             } while (!szame(tet, 0));
             asztal.jatekosok[i].tet = atoi(tet); //ascii kodok miatt
             tetkiir(asztal.jatekosok[i]);
@@ -132,7 +144,7 @@ Asztal jatekmenet(Asztal asztal){
         int botlep = asztal.jatekosok[i].bot > asztal.jatekosok[i].laposszeg;
 
         if(botlep){inp[0] = '0'; econio_sleep(1);}
-        else if(asztal.jatekosok[i].bot > 0 && !botlep){inp[0] = '1';econio_sleep(1);}
+        else if(asztal.jatekosok[i].bot > 0 && !botlep){inp[0] = '1';}
         
         if(asztal.jatekosok[i].bot == 0 && asztal.jatekosok[i].laposszeg < 21){
             removetext(12,16);
@@ -142,7 +154,6 @@ Asztal jatekmenet(Asztal asztal){
         }
 
         while(inp[0]!='1' && asztal.jatekosok[i].laposszeg<21){
-            botlep = asztal.jatekosok[i].bot > asztal.jatekosok[i].laposszeg;
             switch (inp[0])
             {
             case '0':
@@ -171,10 +182,11 @@ Asztal jatekmenet(Asztal asztal){
                     inp[0] = '1';
                 }
             default:
-                printf("Nincs ilyen menupont!");
+                printf("%sNincs ilyen menupont!%s","\033[1;31m","\033[0m");
                 econio_sleep(3);
                 break;
             }
+            botlep = asztal.jatekosok[i].bot > asztal.jatekosok[i].laposszeg;
 
             removetext(17,18);
             lapmenu(asztal.jatekosok[i]);
@@ -188,8 +200,7 @@ Asztal jatekmenet(Asztal asztal){
                 inp[0] = '1';
             }
         }
-        removetext(17,18);
-        lapmenu(asztal.jatekosok[i]);
+        removetext(12,18);
     }
     removetext(12,18);
 
@@ -224,7 +235,7 @@ Asztal jatekmenet(Asztal asztal){
     }
     
     econio_gotoxy(0,18);
-    printf("Nyomj entert a tovabblepeshez!");
+    printf("%sNyomj entert a tovabblepeshez!%s","\033[1;33m","\033[0m");
     char enter = 0;
     fflush(stdin);
     while(enter!='\n' && enter != '\r'){
