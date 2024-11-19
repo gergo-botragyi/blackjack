@@ -40,7 +40,9 @@ char* jatekosnev(Jatekostomb jatekostomb, char *nev){
     printf("Jatekos neve: ");
 
     econio_textcolor(COL_GREEN);
-    scanf("%s", nev);
+    scanf("%20s", nev);
+    char extra = 0;
+    while((extra=getchar())!='\n' && extra!=EOF); //20. beolvasott karakter utan levo karakterek ott maradnanak a bemeneten
     econio_textcolor(COL_LIGHTGRAY);
 
     removetext(12, 12+(jatekostomb.meret));
@@ -167,7 +169,7 @@ Jatek leultetes(Jatek jatek, Jatekostomb jatekostomb, int bot){
         return jatek;
     }else{
         econio_gotoxy(0,20);
-        printf("%sEz a jatekos mar jatekban van vagy nincs hely az asztalnal!%s","\033[1;31m","\033[0m");
+        printf("%sEz a jatekos mar jatekban van vagy nincs hely az asztalnal!%s","\033[31m","\033[0m");
         econio_sleep(3);
     }
 
@@ -185,7 +187,9 @@ Jatek felallitas(Jatek jatek){
 
     char nev[21];
     econio_textcolor(COL_GREEN);
-    scanf("%s", nev);
+    scanf("%20s", nev);
+    char extra = 0;
+    while((extra=getchar())!='\n' && extra!=EOF); //20. beolvasott karakter utan levo karakterek ott maradnanak a bemeneten
     econio_textcolor(COL_LIGHTGRAY);
 
     if(jatszik(jatek, nev)){ //ha jatszik akkor -1 a jatekos szeke, az adott szek pedig 0 mert ures lesz
@@ -198,7 +202,7 @@ Jatek felallitas(Jatek jatek){
         }
     }else{
         econio_gotoxy(0,20);
-        printf("%sEz a jatekos nem ul az asztalnal!%s","\033[1;31m","\033[0m");
+        printf("%sEz a jatekos nem ul az asztalnal!%s","\033[31m","\033[0m");
         econio_sleep(3);
     }
     return jatek;
@@ -247,19 +251,23 @@ Asztal asztalletrehoz(Jatek jatek, Asztal asztal){
     asztal.jatekosok[0].vesztett = 0;
 
     int j = 1;
-    for (int i = 1; i < jatek.meret; i++)
+    for (int k = 0; k < 5; k++)
     {
-        if(jatek.jatekosok[i].szek != -1){
-            strcpy(asztal.jatekosok[j].nev, jatek.jatekosok[i].nev);
-            asztal.jatekosok[j].tet = 0;
-            asztal.jatekosok[j].lapszam = 0;
-            asztal.jatekosok[j].laposszeg = 0;
-            asztal.jatekosok[j].szek = jatek.jatekosok[i].szek;
-            asztal.jatekosok[j].bot = jatek.jatekosok[i].bot;
-            asztal.jatekosok[j].vesztett = 0;
-            j++;
+        for (int i = 1; i < jatek.meret; i++)
+        {
+            if(jatek.jatekosok[i].szek == k){
+                strcpy(asztal.jatekosok[j].nev, jatek.jatekosok[i].nev);
+                asztal.jatekosok[j].tet = 0;
+                asztal.jatekosok[j].lapszam = 0;
+                asztal.jatekosok[j].laposszeg = 0;
+                asztal.jatekosok[j].szek = jatek.jatekosok[i].szek;
+                asztal.jatekosok[j].bot = jatek.jatekosok[i].bot;
+                asztal.jatekosok[j].vesztett = 0;
+                j++;
+            }
         }
     }
+    
     asztal.meret = j;
     return asztal;
 }
@@ -267,8 +275,10 @@ Asztal asztalletrehoz(Jatek jatek, Asztal asztal){
 Jatek asztalment(Jatek jatek, Asztal asztal){    
     for (int i = 1; i < jatek.meret; i++)
     {
-        int index = jatek.szekek[asztal.jatekosok[i].szek]; //a jatek.szek tarolja a jatekos indexet aki ott ul
-        jatek.jatekosok[index].nyeremeny += asztal.jatekosok[i].tet; 
+        if(asztal.jatekosok[i].bot == 0){
+            int index = jatek.szekek[asztal.jatekosok[i].szek]; //a jatek.szek tarolja a jatekos indexet aki ott ul
+            jatek.jatekosok[index].nyeremeny += asztal.jatekosok[i].tet; 
+        }
     }
     return jatek;
 }
@@ -286,34 +296,31 @@ Jatekostomb ujjatek(Jatekostomb jatekostomb){
     jatek.jatekosok[0].szek = -1;
     jatek.jatekosok[0].bot = 17;
 
-    char inp[10];
+    int inp = 8;
 
     econio_clrscr();
     asztalrajz(jatek); //asztal megjelenítése a képernyőn
     jatekmenu(); //menü megjelenítése a képernyőn
-    econio_textcolor(COL_BLUE);
-    scanf("%s", inp);
-    econio_textcolor(COL_LIGHTGRAY);
-    if(!szame(inp,1)){inp[0] = '8';} //ha nem szam vagy hosszabb mint 1 akkor nem letezo menupont
+    inp = input();
 
-    while(inp[0] != '9'){ //9 a vissza
-        switch (inp[0])
+    while(inp != 9){ //9 a vissza
+        switch (inp)
         {
-        case '0':
+        case 0:
             jatek = leultetes(jatek, jatekostomb, 0); //jatekos leultetese
             jatekostomb = frissjatekosok(jatekostomb,jatek); //potencialis uj jatekosok mentese
             break;
-        case '1':
-            jatek = leultetes(jatek, jatekostomb, (rand()%(17 - 15 +1)+15)); //bot leultetese (random valtozo 15 es 17 kozott a bot jatekstilusa (mire nem ker mar lapot))
+        case 1:
+            jatek = leultetes(jatek, jatekostomb, (rand()%(18 - 15 +1)+15)); //bot leultetese (random valtozo 15 es 18 kozott a bot jatekstilusa (mire nem ker mar lapot))
             jatekostomb = frissjatekosok(jatekostomb,jatek);
             break;
-        case '2':
+        case 2:
             if(jatek.meret>1){
                 jatek = felallitas(jatek);
                 jatekostomb = frissjatekosok(jatekostomb,jatek);
             }
             break;
-        case '3':
+        case 3:
             asztal = asztalletrehoz(jatek, asztal);
             asztal = jatekmenet(asztal);
             jatek = asztalment(jatek, asztal);
@@ -322,16 +329,14 @@ Jatekostomb ujjatek(Jatekostomb jatekostomb){
             break;
         
         default:
-            printf("%sNincs ilyen menupont!%s","\033[1;31m","\033[0m");
+            printf("%sNincs ilyen menupont!%s","\033[31m","\033[0m");
             econio_sleep(3);
             break;
         }
         asztalrajz(jatek);
         jatekmenu();
         econio_textcolor(COL_BLUE);
-        scanf("%s", inp);
-        econio_textcolor(COL_LIGHTGRAY);
-        if(!szame(inp,1)){inp[0] = '8';} //ha nem szam vagy hosszabb mint 1 akkor nem letezo menupont
+        inp = input();
         
     }
 

@@ -4,6 +4,7 @@
 typedef struct Kartya{
     char lap[3];
     int ertek;
+    short szin;
 } Kartya;
 
 typedef struct Asztalnal{

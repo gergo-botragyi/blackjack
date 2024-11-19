@@ -2,5 +2,6 @@
 #define MAIN_H
 
 int szame(char *inp, int menue);
+int input();
 
 #endif

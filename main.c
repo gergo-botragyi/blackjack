@@ -24,6 +24,18 @@ int szame(char *inp, int menue){
     return 1;
 }
 
+int input(){
+    char inp[10];
+    econio_textcolor(COL_BLUE);
+    scanf("%10s", inp);
+    econio_textcolor(COL_LIGHTGRAY);
+    if(!szame(inp,1)){return 8;} //ha nem szam vagy hosszabb mint 1 akkor nem letezo menupont
+    int inpszam = inp[0]-'0';
+    char extra = 0;
+    while((extra=getchar())!='\n' && extra!=EOF); //20. beolvasott karakter utan levo karakterek ott maradnanak a bemeneten
+    return inpszam;
+}
+
 //a fomenu function
 int main(){
     econio_set_title("Blackjack");
@@ -46,22 +58,21 @@ int main(){
         fileletrehoz();
     }
 
-
+    logo();
     mainmenu();
 
-    char inp[10];
-    scanf("%s", inp); 
-    if(!szame(inp, 1)){inp[0] = '8';} //ha nem szam vagy hosszabb mint 1 akkor nem letezo menupont
-    while(inp[0]!='9'){ //3 a kilepes
-        switch (inp[0])
+    int inp = 8;
+    inp = input();
+    while(inp!=9){ //3 a kilepes
+        switch (inp)
         {
-            case '0':
+            case 0:
                 jatekostomb = ujjatek(jatekostomb);
                 break;
-            case '1':
+            case 1:
                 jatekostomb = jatekos(jatekostomb);
                 break;
-            case '2':
+            case 2:
                 gyik();
                 break;
             default:
@@ -70,11 +81,12 @@ int main(){
                 break;
         }
         econio_clrscr();
+        logo();
         mainmenu();
-        scanf("%s", inp);
-        if(!szame(inp, 1)){inp[0] = '8';} //input vagy nem letezo menupont
+        inp = input();
     }
 
+    printf("\033[0m");
     felszabadit(jatekostomb.jatekosok);
     return 0;
 }

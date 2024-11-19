@@ -5,10 +5,15 @@
 #include "jatekmenet.h"
 
 void jatekosmenu();
+
 void mainmenu();
+
 void jatekmenu();
-//void asztaladatok(Asztal asztal);
+
 void asztalrajz(Jatek jatek);
 void lapmenu(Asztalnal jatekos);
+void botnev(Asztalnal jatekos);
+
+void logo();
 
 #endif

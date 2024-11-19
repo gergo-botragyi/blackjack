@@ -1,0 +1,33 @@
+Gyakori kerdesek
+
+-Hogyan iranyitom a programot?
+Ez a program menuvezerelt, azaz a billentyuzeted segitsegevel navigalhatsz.
+Az egyes menupontok sorszamai nevuk mellett vannak feltuntetve.
+Az egyiket beirva es entert nyomva belephetsz abba a menupontba.
+
+-Mi a jatek lenyege?
+A blackjack vagy magyarul huszonegy lenyege, hogy a jatekos lapjainak
+osszege minel kozelebb legyen a 21-hez es nagyobb legyen mint az osztoe.
+
+-Mit jelentenek a *hit*, *stand*, *double*, *surrender* opciok?
+A *hit* a lapkerest jelenti, ezzel kerhetsz uj kartyat.
+A *stand* azt jelenti nem kersz tobb kartyat. Ekkor a kovetkezo jatekos jon.
+A *double* azt jelenti, hogy duplazod a teted. Ez csak akkor lehet ha meg nem
+kertel uj lapokat.
+A *surrender* azt jelenti feladod a kort. Ez is csak akkor lehetseges, ha nem
+kertel meg uj lapot. Ekkor csak teted felet veszted el.
+
+-Mikor vesztek?
+Ha a lapjaid osszege meghaladta a 21-et, vagy az oszto laposszege nagyobb.
+
+-Mennyit nyerek?
+Ha nagyobb a laposszeged az osztoenal akkor teted ketszereset nyered. Ha 21-gyel nyertel
+akkor a 3/2 szereset. Dontetlennel visszakapod teted, azaz nem nyertel semennyit.
+
+-A botok hogy jatszanak?
+Kulonbozo nehezsegu botok vannak. Van amelyik 15 laposszegnel mar megall, 
+van amelyik csak 18-nal.
+
+-Az oszto hogy jatszik?
+Az oszto kezdetben egy lapot kap, meg egyet leforditva. Ha minden jatekos volt mar, 
+akkor jon az oszto. Neki 17 laposszegig kotelezo lapot vennie, ezutan megall.
