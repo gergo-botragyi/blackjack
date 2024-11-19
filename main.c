@@ -24,13 +24,16 @@ int szame(char *inp, int menue){
     return 1;
 }
 
+//beker egy inputot
+//stringkent keri be, hogy mindenkepp be tudja olvasni, de ellenorzi, hogy szam-e
+//kimenet a bejovo input
 int input(){
     char inp[10];
     econio_textcolor(COL_BLUE);
     scanf("%10s", inp);
     econio_textcolor(COL_LIGHTGRAY);
     if(!szame(inp,1)){return 8;} //ha nem szam vagy hosszabb mint 1 akkor nem letezo menupont
-    int inpszam = inp[0]-'0';
+    int inpszam = inp[0]-'0'; //ascii karakterkoddal szamma atalakitas
     char extra = 0;
     while((extra=getchar())!='\n' && extra!=EOF); //20. beolvasott karakter utan levo karakterek ott maradnanak a bemeneten
     return inpszam;
@@ -39,7 +42,7 @@ int input(){
 //a fomenu function
 int main(){
     econio_set_title("Blackjack");
-    //TESZTHEZ innentol
+    /*TESZTHEZ INNENTOL
     FILE *file;
     file = fopen("jatekosok.txt", "w");
     fprintf(file, "4\n");
@@ -48,7 +51,7 @@ int main(){
     fprintf(file, "C 2222 2\n");
     fprintf(file, "D 3333 3\n");
     fclose(file);
-    //idaig
+    IDAIG*/
 
     int meret = filemeret();
     Jatekostomb jatekostomb = {NULL, meret};
@@ -63,7 +66,7 @@ int main(){
 
     int inp = 8;
     inp = input();
-    while(inp!=9){ //3 a kilepes
+    while(inp!=9){ //9 a kilepes
         switch (inp)
         {
             case 0:

@@ -4,6 +4,7 @@
 #include "debugmalloc.h"
 
 //a gyik menuert felelos function
+//beolvassa a gyik.txt-t ami tartalmazza a szoveget
 int gyik(){
     econio_clrscr();
     FILE *file = fopen("gyik.txt", "r");
@@ -11,9 +12,10 @@ int gyik(){
 
     char sor[256];
     fgets(sor, sizeof(sor), file);
-    printf("%s%s%s","\033[36m",sor,"\033[0m");
+    printf("%s%s%s","\033[36m",sor,"\033[0m"); //elso sort cyan szinnel irja ki
+
     while(fgets(sor, sizeof(sor), file)){
-        if(sor[0]=='-'){
+        if(sor[0]=='-'){ //a fo sorokat sargan irja ki
             printf("\033[33m");
             printf("%s", sor);
             printf("\033[0m");

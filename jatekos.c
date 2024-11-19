@@ -91,6 +91,8 @@ void fileletrehoz(){
     fclose(file);
 }
 
+//jatekos lancolt tombot felszabait
+//bemenet a lancolt jatekos tomb eleje
 void felszabadit(Jatekos *eleje){
     Jatekos *mozgo = eleje;
     while(mozgo !=NULL){
@@ -152,6 +154,8 @@ Jatekostomb szerkesztes(Jatekostomb jatekostomb){
     return jatekostomb;
 }
 
+//hozzaad egy jatekost a lancolt tombhoz
+//bemenet a lancolt jatekos tomb eleje es az uj jatekos
 void jatekoshozzaad(Jatekos *eleje, Jatekos *uj){
     Jatekos *mozgo = eleje;
     while(mozgo->kov!=NULL){
@@ -194,8 +198,12 @@ Jatekostomb letrehozas(Jatekostomb jatekostomb){
 
     Jatekos *keresett = letezik(jatekostomb, uj->nev);
     if(keresett == NULL){
+        if(jatekostomb.meret>0){
+            jatekoshozzaad(jatekostomb.jatekosok, uj);
+        }else{
+            jatekostomb.jatekosok = uj;
+        }
         jatekostomb.meret++;
-        jatekoshozzaad(jatekostomb.jatekosok, uj);
 
         econio_clrscr();
         kiir(jatekostomb);
@@ -208,6 +216,9 @@ Jatekostomb letrehozas(Jatekostomb jatekostomb){
     return jatekostomb;
 }
 
+//torol egy jatekost a tombbol
+//bemenet a jatekostomb (lancolt) es a torolni kivant jatekos neve
+//kimenet a modisitott jatekostomb (meret is modosul, ezert nem eleg csak a tomb elejet odaadni)
 Jatekostomb jatekostorol(Jatekostomb jatekostomb, char *nev){
     Jatekos *lemarado = NULL;
     Jatekos *mozgo = jatekostomb.jatekosok;
@@ -230,6 +241,9 @@ Jatekostomb jatekostorol(Jatekostomb jatekostomb, char *nev){
     return jatekostomb;
 }
 
+//torlesert felelos function
+//bemenet es kimenet a jatekostomb (lancolt)
+//meret modosulasa miatt az egeszet oda kell adni
 Jatekostomb torles(Jatekostomb jatekostomb){
     econio_clrscr();
     kiir(jatekostomb);

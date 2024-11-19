@@ -4,8 +4,6 @@
 #include "debugmalloc.h"
 #include "jatek.h"
 #include "jatekmenet.h"
-#include "jatekos.h"
-#include "main.h"
 
 //jatekos
 //jatekos menu kiirasa
@@ -104,6 +102,9 @@ void asztalrajz(Jatek jatek){
     printf("\n\n\n\n"); //asztal alatti terulet
 }
 
+//jatekmenet
+//a jatekos opcioit irja ki
+//bemenet egy jatekban levo jatekos
 void lapmenu(Asztalnal jatekos){
     econio_gotoxy(0,12);
     printf("Jatekos: ");
@@ -127,6 +128,9 @@ void lapmenu(Asztalnal jatekos){
     printf("3%s\n","\033[0m");
 }
 
+//jatekmenet
+//a botok lepesenel a nevuket irja ki
+//bemenet egy jatekban levo jatekos
 void botnev(Asztalnal jatekos){
     econio_gotoxy(0,12);
     printf("Jatekos: ");
@@ -134,6 +138,7 @@ void botnev(Asztalnal jatekos){
     printf("%s%s\n", jatekos.nev, "\033[0m");
 }
 
+//kirajzolja a logot
 void logo(){
     printf("\033[92m");
     printf("$$$$$$$\\  $$\\                     $$\\                               $$\\       \n");

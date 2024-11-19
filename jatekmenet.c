@@ -10,11 +10,15 @@
 #include "debugmalloc.h"
 #include "konzol.h"
 
+//kiirja a jatekosok tetjeit
+//bemenet az asztal tomb, ez alapjan kiirja a megadott teteket
 void tetkiir(Asztalnal jatekos){
     econio_gotoxy((jatekos.szek)*20,9);
     printf("%s%d%s","\033[0;33m", jatekos.tet,"\033[0m");
 }
 
+//kiirja a jatekosok laposszeget es lapjait
+//bemenet egy jatekban levo jatekos, es egy "bool", hogy osztot ir-e ki
 void lapotkiir(Asztalnal jatekos, int oszto){
     if(oszto){econio_gotoxy(48,3);}else{econio_gotoxy(jatekos.szek*20,5);}
     econio_textbackground(COL_GREEN);
@@ -32,29 +36,38 @@ void lapotkiir(Asztalnal jatekos, int oszto){
     econio_textbackground(COL_BLACK);
 }
 
+//kiirja ha a jatekos vesztett
+//bemenet egy jatekban levo jatekos
 void vesztett(Asztalnal jatekos){
     econio_gotoxy(jatekos.szek*20, 10);
     printf("%sVesztett!%s","\033[31m","\033[0m");
 }
 
+//kiirja ha a jatekos nyert
+//bemenet egy jatekban levo jatekos
 void nyert(Asztalnal jatekos){
     econio_gotoxy(jatekos.szek*20, 10);
     printf("%sNyert!%s","\033[32m","\033[0m");
 }
 
+//kiirja ha a dontetlen az eredmeny
+//bemenet egy jatekban levo jatekos
 void dontetlen(Asztalnal jatekos){
     econio_gotoxy(jatekos.szek*20, 10);
     printf("%sDontetlen!%s","\033[34m","\033[0m");
 }
 
+//a tetek megteteleert felelos function
+//bemenet a jatekban levo jatekosok tombje (asztal tomb)
+//kimenet a megvaltoztatott asztal tomb
 Asztal tetek(Asztal asztal){
     for (int i = 1; i < asztal.meret; i++)
     {
         removetext(12,18);
         econio_gotoxy(0,12);
-        if(asztal.jatekosok[i].bot != 0){
+        if(asztal.jatekosok[i].bot != 0){ //ha bot akkor random tetje van
             econio_sleep(1);
-            //rand() % (max - min + 1) + min -- a minimum maximum ertekek miatt, ezutan 10-zel osztva, hogy valodibb legyen
+            //rand() % (max - min + 1) + min  //a minimum maximum ertekek miatt
             asztal.jatekosok[i].tet = rand() % (5000 - 500 + 1) + 500;
             tetkiir(asztal.jatekosok[i]);
         }
@@ -64,23 +77,28 @@ Asztal tetek(Asztal asztal){
             {
                 printf("Jatekos: %s%s%s\n","\033[0;32m", asztal.jatekosok[i].nev,"\033[0m");
                 printf("Tet: ");
-                printf("\033[33m");
+                printf("\033[33m"); //sarga
                 scanf("%20s", tet);
                 econio_textcolor(COL_LIGHTGRAY);
                 char extra = 0;
                 while((extra=getchar())!='\n' && extra!=EOF); //20. beolvasott karakter utan levo karakterek ott maradnanak a bemeneten
-            } while (!szame(tet, 0));
-            asztal.jatekosok[i].tet = atoi(tet); //ascii kodok miatt
+            } while (!szame(tet, 0)); //ha nem szamot adott meg ujra kerjuk
+            asztal.jatekosok[i].tet = atoi(tet); //string atalakitasa int-te
             tetkiir(asztal.jatekosok[i]);
         }
     }
     return asztal;
 }
 
+//lapot ad egy jatekosnak
+//bemenet egy jatekban levo jatekos es a lapok tomb
+//kimenet a modositott jatekos
 Asztalnal lapotkap(Asztalnal jatekos, Kartya *lapok){
     
-    int index = (rand()%(12-0+1)+0);
+    int index = (rand()%(12-0+1)+0); //random index
     int lapertek = lapok[index].ertek;
+    //ha a jatekos laposszege + az uj lap erteke nagyobb lenne mint 21, akkor meg kell nezni, hogy van-e Asza
+    //ha van nala Asz, meg kell nezni, hogy ha azt 1-nek szamoljuk ugy 21-en belul marad-e
     if(lapertek+jatekos.laposszeg>21){
         int i = 0;
         while(i<jatekos.lapszam && jatekos.laposszeg+lapertek>21){
@@ -92,10 +110,10 @@ Asztalnal lapotkap(Asztalnal jatekos, Kartya *lapok){
         }
     }
 
-    jatekos.lapok[jatekos.lapszam] = lapok[index];
-    jatekos.lapok[jatekos.lapszam].szin = (rand()%(1-0+1)+0);
+    jatekos.lapok[jatekos.lapszam] = lapok[index]; //megkapja a lapot
+    jatekos.lapok[jatekos.lapszam].szin = (rand()%(1-0+1)+0); //a lap szine random 0 vagy 1, ami kiirasnal cyan vagy piros
     jatekos.laposszeg+=lapertek; 
-    if(lapertek==11 && jatekos.laposszeg>21){
+    if(lapertek==11 && jatekos.laposszeg>21){ //ha Aszt kapott, meg kell nezni, hogy 11-gyel szamolva kiment-e 21-bol, ha igen 1-nek veszi
         jatekos.laposszeg -= 10;
         jatekos.lapok[jatekos.lapszam].ertek = 1; 
     }
@@ -104,17 +122,19 @@ Asztalnal lapotkap(Asztalnal jatekos, Kartya *lapok){
     return jatekos;
 }
 
-
+//a kezdeti osztasert felelos function
+//bemenet az asztal tomb, a lapok tomb, es hogy az oszto lapja le van-e forditva (kezdetben 0)
+//kimenet a megvaltoztatott asztal tomb
 Asztal osztas(Asztal asztal, Kartya *lapok, int leforditott){
-    for (int i = 1; i < asztal.meret; i++)
+    for (int i = 1; i < asztal.meret; i++) //eloszor minden jatekos kap lapot
     {
         asztal.jatekosok[i] = lapotkap(asztal.jatekosok[i], lapok);
         lapotkiir(asztal.jatekosok[i], 0);
         econio_sleep(1);
     }
-    asztal.jatekosok[0] = lapotkap(asztal.jatekosok[0], lapok);
+    asztal.jatekosok[0] = lapotkap(asztal.jatekosok[0], lapok); //oszto kap lapot
 
-    if(!leforditott){
+    if(!leforditott){ //ha meg nem a leforditott (masodik) lapjat kapja az oszto, akkor rekurzivan meghivjuk megegyszer, mert 2-2 karytat kell osztani
         lapotkiir(asztal.jatekosok[0],1);
         econio_sleep(1);
         asztal = osztas(asztal, lapok, 1);
@@ -122,8 +142,10 @@ Asztal osztas(Asztal asztal, Kartya *lapok, int leforditott){
     return asztal;
 }
 
+//a jatekmenet fo function-je
+//bemenet es kimenet is az asztaltomb, amit bent modositunk persze
 Asztal jatekmenet(Asztal asztal){
-    srand(time(NULL));
+    srand(time(NULL)); //random miatt
 
     Kartya lapok[] = {
         {.lap = "2",.ertek=2},{.lap="3",.ertek=3},
@@ -135,18 +157,18 @@ Asztal jatekmenet(Asztal asztal){
         {.lap = "A",.ertek=11}
     };
 
-    asztal = tetek(asztal);
-    asztal = osztas(asztal, lapok, 0);
+    asztal = tetek(asztal); //tetek megtetele
+    asztal = osztas(asztal, lapok, 0); //elso ket lap kiosztasa
 
     for (int i = 1; i < asztal.meret; i++)
     {
         int inp = 8;
-        int botlep = asztal.jatekosok[i].bot > asztal.jatekosok[i].laposszeg;
+        int botlep = asztal.jatekosok[i].bot > asztal.jatekosok[i].laposszeg; //igaz hamis, hogy lephet-e egy bot
 
-        if(botlep){inp = 0; botnev(asztal.jatekosok[i]); econio_sleep(1);}
-        else if(asztal.jatekosok[i].bot > 0 && !botlep){inp = 1; botnev(asztal.jatekosok[i]); econio_sleep(1);}
+        if(botlep){inp = 0; botnev(asztal.jatekosok[i]); econio_sleep(1);} //ha lephet a bot akkor 0 az input
+        else if(asztal.jatekosok[i].bot > 0 && !botlep){inp = 1; botnev(asztal.jatekosok[i]); econio_sleep(1);} //amugy 1
         
-        if(asztal.jatekosok[i].bot == 0 && asztal.jatekosok[i].laposszeg < 21){
+        if(asztal.jatekosok[i].bot == 0 && asztal.jatekosok[i].laposszeg < 21){ //csak ha nem bot es meg kerhet lapot
             removetext(12,16);
             lapmenu(asztal.jatekosok[i]);
             inp = input();
@@ -155,27 +177,27 @@ Asztal jatekmenet(Asztal asztal){
         while(inp!=1 && asztal.jatekosok[i].laposszeg<21){
             switch (inp)
             {
-            case 0:
+            case 0: //lapkeres
                 asztal.jatekosok[i] = lapotkap(asztal.jatekosok[i], lapok);
                 lapotkiir(asztal.jatekosok[i], 0);
                 if(asztal.jatekosok[i].laposszeg>21){
                     asztal.jatekosok[i].vesztett = 1;
-                    asztal.jatekosok[i].tet *= -1;
+                    asztal.jatekosok[i].tet *= -1; //tetjet elvesziti tehat nyeremenyehez a -1-szereset kell hozzaadni
                     vesztett(asztal.jatekosok[i]);
                     inp = 1;
                 }
                 if(asztal.jatekosok[i].bot > 0){econio_sleep(1);}
                 break;
-            case 2:
+            case 2: //double
                 if(asztal.jatekosok[i].lapszam == 2){
-                    asztal.jatekosok[i].tet *= 2;
+                    asztal.jatekosok[i].tet *= 2; //tet duplazasa
                     tetkiir(asztal.jatekosok[i]);
                     inp = 1;
                 }
                 break;
-            case 3:
+            case 3: //surrender
                 if(asztal.jatekosok[i].lapszam == 2){
-                    asztal.jatekosok[i].tet *= -0.5;
+                    asztal.jatekosok[i].tet *= -0.5; //csak a felet veszti el
                     tetkiir(asztal.jatekosok[i]);
                     asztal.jatekosok[i].vesztett = 1;
                     vesztett(asztal.jatekosok[i]);
@@ -192,7 +214,7 @@ Asztal jatekmenet(Asztal asztal){
             removetext(17,18);
             lapmenu(asztal.jatekosok[i]);
 
-            if(inp != 1 && asztal.jatekosok[i].laposszeg<21 &&asztal.jatekosok[i].bot==0){
+            if(inp != 1 && asztal.jatekosok[i].laposszeg<21 &&asztal.jatekosok[i].bot==0){ //jatekosnal ujra menu, amugy a botot leptetjuk
                 inp = input();
             }else if(botlep && asztal.jatekosok[i].bot>0){
                 inp = 0;
@@ -204,9 +226,9 @@ Asztal jatekmenet(Asztal asztal){
     }
     removetext(12,18);
 
-    lapotkiir(asztal.jatekosok[0],1);
+    lapotkiir(asztal.jatekosok[0],1); //oszto leforditott lapjanak megjelenitese
     econio_sleep(1);
-    while(asztal.jatekosok[0].bot>asztal.jatekosok[0].laposszeg && asztal.jatekosok[0].laposszeg<21){
+    while(asztal.jatekosok[0].bot>asztal.jatekosok[0].laposszeg && asztal.jatekosok[0].laposszeg<21){ //oszto huzasa
         asztal.jatekosok[0] = lapotkap(asztal.jatekosok[0], lapok);
         lapotkiir(asztal.jatekosok[0], 1);
         econio_sleep(1);
@@ -218,18 +240,18 @@ Asztal jatekmenet(Asztal asztal){
     {
         jatekoslaposszeg = asztal.jatekosok[i].laposszeg;
         if(!asztal.jatekosok[i].vesztett){
-            if(jatekoslaposszeg == 21 && osztolaposszeg != 21){
+            if(jatekoslaposszeg == 21 && osztolaposszeg != 21){ //blackjacknel 3/2 szerese a tet
                 asztal.jatekosok[i].tet /= 2;
                 asztal.jatekosok[i].tet *= 3;
                 nyert(asztal.jatekosok[i]);
             }else if(osztolaposszeg>21 || jatekoslaposszeg > osztolaposszeg){
-                asztal.jatekosok[i].tet *= 2;
+                asztal.jatekosok[i].tet *= 2; //nyeresnel ketszerezodik a tet
                 nyert(asztal.jatekosok[i]);
             }else if(osztolaposszeg>jatekoslaposszeg){
                 asztal.jatekosok[i].tet *= -1;
                 vesztett(asztal.jatekosok[i]);
             }else{
-                asztal.jatekosok[i].tet = 0;
+                asztal.jatekosok[i].tet = 0; //dontetlennel nem nyer semmit mert kvazi "visszakapja" a tetet
                 dontetlen(asztal.jatekosok[i]);
             }
         }

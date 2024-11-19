@@ -228,6 +228,9 @@ Jatekostomb frissjatekosok(Jatekostomb jatekostomb, Jatek jatek){
     return jatekostomb;
 }
 
+//elmenti azon jatekosok adatait akik jatszottak, hogy utana fajlba tudja irni kesobb
+//bemenet a jatekostomb lancolt lista es a jatek tomb
+//vegigmeny a tombokon es ahol egyezik a nev ott elmenti a nyeremenyt es noveli a kort
 void adatmentes(Jatekostomb jatekostomb, Jatek jatek){
     Jatekos *mozgo = jatekostomb.jatekosok;
     while(mozgo!=NULL){
@@ -241,6 +244,9 @@ void adatmentes(Jatekostomb jatekostomb, Jatek jatek){
     }
 }
 
+//letrehozza az asztal tombot a jatek kezdetehez
+//bemenet a jatek tomb es egy ures asztal tomb
+//eloszor letrehozza az osztot majd a leultetett jatekosokat
 Asztal asztalletrehoz(Jatek jatek, Asztal asztal){
     strcpy(asztal.jatekosok[0].nev, "Oszto");
     asztal.jatekosok[0].tet = 0;
@@ -272,6 +278,9 @@ Asztal asztalletrehoz(Jatek jatek, Asztal asztal){
     return asztal;
 }
 
+//elmenti az asztalt a jatek tombbe
+//bemenet a jatek tomb es az asztal
+//akik jatekban voltak nekik elmenti a nyeremenyuket
 Jatek asztalment(Jatek jatek, Asztal asztal){    
     for (int i = 1; i < jatek.meret; i++)
     {
