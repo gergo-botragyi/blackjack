@@ -221,8 +221,12 @@ Jatekostomb frissjatekosok(Jatekostomb jatekostomb, Jatek jatek){
             uj->nyeremeny = 0;
             uj->kov = NULL;
 
+            if(jatekostomb.meret>0){
+                jatekoshozzaad(jatekostomb.jatekosok, uj);
+            }else{
+                jatekostomb.jatekosok = uj;
+            }
             jatekostomb.meret++;
-            jatekoshozzaad(jatekostomb.jatekosok, uj);
         }
     }
     return jatekostomb;
@@ -330,11 +334,13 @@ Jatekostomb ujjatek(Jatekostomb jatekostomb){
             }
             break;
         case 3:
-            asztal = asztalletrehoz(jatek, asztal);
-            asztal = jatekmenet(asztal);
-            jatek = asztalment(jatek, asztal);
-            adatmentes(jatekostomb, jatek);
-            filebair(jatekostomb);
+            if(jatek.meret>1){
+                asztal = asztalletrehoz(jatek, asztal);
+                asztal = jatekmenet(asztal);
+                jatek = asztalment(jatek, asztal);
+                adatmentes(jatekostomb, jatek);
+                filebair(jatekostomb);
+            }
             break;
         
         default:
