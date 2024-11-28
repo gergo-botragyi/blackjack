@@ -190,8 +190,16 @@ Asztal jatekmenet(Asztal asztal){
                 break;
             case 2: //double
                 if(asztal.jatekosok[i].lapszam == 2){
-                    asztal.jatekosok[i].tet *= 2; //tet duplazasa
-                    tetkiir(asztal.jatekosok[i]);
+                    asztal.jatekosok[i] = lapotkap(asztal.jatekosok[i], lapok);
+                    lapotkiir(asztal.jatekosok[i], 0);
+                    if(asztal.jatekosok[i].laposszeg>21){
+                        asztal.jatekosok[i].vesztett = 1;
+                        asztal.jatekosok[i].tet *= -1; //tetjet elvesziti tehat nyeremenyehez a -1-szereset kell hozzaadni
+                        vesztett(asztal.jatekosok[i]);
+                    }else{
+                        asztal.jatekosok[i].tet *= 2; //tet duplazasa
+                        tetkiir(asztal.jatekosok[i]);
+                    }
                     inp = 1;
                 }
                 break;
