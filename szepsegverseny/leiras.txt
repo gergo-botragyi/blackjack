@@ -1,0 +1,3 @@
+Blackjack
+
+Ez a program egy konzolban futó, menüvezérelt blackjack, magyarul huszonegy játék. A blackjack egy klasszikus kaszinós kártyajáték, melyben a játékosok az osztó ellen játszanak. A cél, hogy a játékos kezében lévő lapok összege ne haladja meg a 21-et, de nagyobb legyen, mint az osztó lapösszege. A programban van lehetőség új játékosok létrehozására vagy már meglévő játékosok szerkesztésére, törlésére. Minden játékoshoz automatikusan mentésre kerül az eddig nyert/vesztett összege és hogy hány kört játszott. Ezen kívül a program maga is tud játszani az osztó ellen, különböző mértékű rizikót vállaló botokkal.

@@ -1,5 +1,4 @@
-4
-domi -100 1
-geri 2000 1
-deki 155050 10
-bence -468301230 6
+3
+Jatekos1 -346 2
+Jatekos2 -200 1
+Jatekos3 0 1
