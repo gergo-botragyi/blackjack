@@ -1,4 +1,0 @@
-3
-Jatekos1 -346 2
-Jatekos2 -200 1
-Jatekos3 0 1
