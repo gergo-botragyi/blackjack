@@ -5,7 +5,7 @@
 
 //jatekban levo jatekos strukturaja
 typedef struct Jatekban{
-    char nev[21]; //max 20 karakter a nev + lezaro nulla
+    char nev[21]; //max 20 karakter a nev + lezaro nulla 
     int nyeremeny;
     int szek;
     int bot;

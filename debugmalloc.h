@@ -11,7 +11,7 @@
 
 
 enum {
-    /* size of canary in bytes. should be multiple of largest alignment
+    /* size of canary in bytes. should be multiple of largest alignment 
      * required by any data type (usually 8 or 16) */
     debugmalloc_canary_size = 64,
     
